@@ -13,7 +13,7 @@ const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jet
 const notoSansKR = Noto_Sans_KR({ subsets: ["latin"], variable: "--font-noto-sans-kr" });
 
 export const metadata: Metadata = {
-  title: "gyuri.log",
+  title: "dev.gyuri",
   description: "확장 가능한 백엔드 시스템과 RESTful API를 설계하는 개발자 포트폴리오",
 };
 
