@@ -8,17 +8,10 @@ import { toast } from "sonner";
 import MDEditor from "@uiw/react-md-editor";
 import { useThemeColors } from "@/contexts/ThemeContext";
 import TerminalLoader from "@/components/TerminalLoader";
+import categoryColors from "@/lib/categoryColors";
 
 const toHeadingId = (text: string) =>
   text.toLowerCase().replace(/[^a-z0-9가-힣\s]/g, "").replace(/\s+/g, "-").trim();
-
-const categoryColors: Record<string, string> = {
-  backend: "#FF8C42",
-  infra: "#4CAF50",
-  architecture: "#64B5F6",
-  devops: "#A78BFA",
-  database: "#F472B6",
-};
 
 export default function BlogDetailPage() {
   const params = useParams<{ id: string }>();
@@ -75,10 +68,10 @@ export default function BlogDetailPage() {
   if (error || !post) {
     return (
       <div
-        className="min-h-screen p-8 pt-20 transition-[background] duration-[350ms]"
+        className="min-h-screen p-8 pt-20 transition-[background] duration-350"
         style={{ background: bg }}
       >
-        <div className="container max-w-[1100px]">
+        <div className="container max-w-275">
           <button
             onClick={() => router.push("/blogs")}
             className="flex items-center gap-1.5 bg-transparent border-none cursor-pointer p-0 font-mono text-[0.75rem] transition-colors duration-200"
@@ -102,13 +95,13 @@ export default function BlogDetailPage() {
 
   return (
     <div
-      className="min-h-screen transition-[background,color] duration-[350ms]"
+      className="min-h-screen transition-[background,color] duration-350"
       style={{ background: bg, color: text, paddingTop: "64px" }}
       data-color-mode={isDark ? "dark" : "light"}
     >
       {/* Back bar */}
       <div
-        className="transition-[background,border-color] duration-[350ms]"
+        className="transition-[background,border-color] duration-350"
         style={{
           background: navBg,
           backdropFilter: "blur(16px)",
@@ -116,7 +109,7 @@ export default function BlogDetailPage() {
           padding: "1rem 0",
         }}
       >
-        <div className="max-w-[1200px] mx-auto px-6 flex items-center justify-between">
+        <div className="max-w-300 mx-auto px-6 flex items-center justify-between">
           <button
             onClick={() => router.push("/blogs")}
             className="flex items-center gap-1.5 bg-transparent border-none cursor-pointer p-0 font-mono text-[0.75rem] transition-colors duration-200"
@@ -130,12 +123,12 @@ export default function BlogDetailPage() {
 
       {/* Content grid */}
       <div
-        className="blog-detail-grid max-w-[1400px] mx-auto px-10 py-12 grid gap-8 items-start"
+        className="blog-detail-grid max-w-350 mx-auto px-10 py-12 grid gap-8 items-start"
         style={{ gridTemplateColumns: tocItems.length > 0 ? "1fr 220px" : "1fr" }}
       >
         <article className="min-w-0">
           {post.coverImage && (
-            <div className="blog-cover-image rounded-xl overflow-hidden mb-8 h-[280px]">
+            <div className="blog-cover-image rounded-xl overflow-hidden mb-8 h-70">
               <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover" />
             </div>
           )}
@@ -153,7 +146,7 @@ export default function BlogDetailPage() {
                 {post.category}
               </span>
               <span
-                className="font-mono text-[0.72rem] flex items-center gap-1 transition-colors duration-[350ms]"
+                className="font-mono text-[0.72rem] flex items-center gap-1 transition-colors duration-350"
                 style={{ color: textFaint }}
               >
                 <Eye size={11} /> {post.viewCount ?? 0}
@@ -161,7 +154,7 @@ export default function BlogDetailPage() {
             </div>
 
             <h1
-              className="font-display font-bold leading-tight mb-4 transition-colors duration-[350ms]"
+              className="font-display font-bold leading-tight mb-4 transition-colors duration-350"
               style={{ fontSize: "clamp(1.75rem, 5vw, 2.75rem)", color: text }}
             >
               {post.title}
@@ -169,13 +162,13 @@ export default function BlogDetailPage() {
 
             <div className="flex items-center gap-5 flex-wrap">
               <span
-                className="font-mono text-[0.72rem] flex items-center gap-1.5 transition-colors duration-[350ms]"
+                className="font-mono text-[0.72rem] flex items-center gap-1.5 transition-colors duration-350"
                 style={{ color: textFaint }}
               >
                 <Calendar size={13} />
                 {new Date(post.publishedAt).toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric" })}
               </span>
-              <span className="font-mono text-[0.72rem] transition-colors duration-[350ms]" style={{ color: textFaint }}>
+              <span className="font-mono text-[0.72rem] transition-colors duration-350" style={{ color: textFaint }}>
                 by {post.author ?? "김규리"}
               </span>
             </div>
@@ -183,7 +176,7 @@ export default function BlogDetailPage() {
 
           <div
             ref={contentRef}
-            className="font-sans text-base leading-[1.85] transition-colors duration-[350ms]"
+            className="font-sans text-base leading-[1.85] transition-colors duration-350"
             style={{ color: textMuted }}
           >
             <MDEditor.Markdown
@@ -194,7 +187,7 @@ export default function BlogDetailPage() {
 
           {tags.length > 0 && (
             <div
-              className="mt-10 pt-7 flex flex-wrap gap-2 transition-[border-color] duration-[350ms]"
+              className="mt-10 pt-7 flex flex-wrap gap-2 transition-[border-color] duration-350"
               style={{ borderTop: `1px solid ${border}` }}
             >
               {tags.map(tag => (
@@ -215,7 +208,7 @@ export default function BlogDetailPage() {
 
           {/* Like / Share */}
           <div
-            className="mt-8 flex gap-3 p-5 rounded-lg transition-[background,border-color] duration-[350ms]"
+            className="mt-8 flex gap-3 p-5 rounded-lg transition-[background,border-color] duration-350"
             style={{ background: bgCard, border: `1px solid ${border}` }}
           >
             <button
@@ -257,7 +250,7 @@ export default function BlogDetailPage() {
             style={{ scrollbarWidth: "thin", scrollbarColor: "rgba(255,140,66,0.25) transparent" }}
           >
             <div
-              className="p-5 rounded-lg transition-[background,border-color] duration-[350ms]"
+              className="p-5 rounded-lg transition-[background,border-color] duration-350"
               style={{ background: bgCard, border: `1px solid ${border}` }}
             >
               <h4 className="font-mono text-[0.7rem] font-semibold tracking-[0.12em] mb-4 text-tangerine">

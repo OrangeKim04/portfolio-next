@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Search, Eye, Heart, Calendar, ArrowLeft } from "lucide-react";
 import { useThemeColors } from "@/contexts/ThemeContext";
 import TerminalLoader from "@/components/TerminalLoader";
+import categoryColors from "@/lib/categoryColors";
 
 interface BlogPost {
   id: string;
@@ -21,14 +22,6 @@ interface BlogPost {
   coverImage: string | null;
 }
 
-const categoryColors: Record<string, string> = {
-  개인: "#FF8C42",
-  backend: "#FF8C42",
-  infra: "#4CAF50",
-  architecture: "#64B5F6",
-  devops: "#A78BFA",
-  database: "#F472B6",
-};
 
 export default function AllBlogs() {
   const router = useRouter();
