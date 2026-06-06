@@ -7,6 +7,9 @@ import { useTheme, useThemeColors } from "@/contexts/ThemeContext";
 
 const navItems = [
   { label: "Home", href: "#hero" },
+  // { label: "About", href: "#about" },
+  // { label: "Skills", href: "#skills" },
+  // { label: "Projects", href: "#projects" },
   { label: "Blog", href: "#blog" },
 ];
 
