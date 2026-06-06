@@ -226,7 +226,7 @@ export default function AllBlogs() {
                       />
                     </div>
                   )}
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0 flex flex-col">
                     <div className="flex justify-between items-center mb-2.5 flex-wrap gap-2">
                       {post.category && (
                         <span
@@ -278,7 +278,7 @@ export default function AllBlogs() {
                       try {
                         const parsed: string[] = JSON.parse(post.tags);
                         return (
-                          <div className="flex gap-1.5 flex-wrap">
+                          <div className="flex gap-1.5 flex-wrap mt-auto pt-1">
                             {parsed.map((tag, idx) => (
                               <span
                                 key={idx}
