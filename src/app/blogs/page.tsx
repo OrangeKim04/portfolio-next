@@ -218,7 +218,7 @@ export default function AllBlogs() {
                   }}
                 >
                   {post.coverImage && (
-                    <div className="blog-list-thumbnail shrink-0 w-[110px] self-stretch rounded-lg overflow-hidden">
+                    <div className="blog-list-thumbnail shrink-0 w-[110px] h-[110px] rounded-lg overflow-hidden">
                       <img
                         src={post.coverImage}
                         alt={post.title}
