@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Search, Eye, Heart, Calendar, ArrowLeft } from "lucide-react";
 import { useThemeColors } from "@/contexts/ThemeContext";
 import TerminalLoader from "@/components/TerminalLoader";
+import categoryColors from "@/lib/categoryColors";
 
 interface BlogPost {
   id: string;
@@ -21,14 +22,6 @@ interface BlogPost {
   coverImage: string | null;
 }
 
-const categoryColors: Record<string, string> = {
-  개인: "#FF8C42",
-  backend: "#FF8C42",
-  infra: "#4CAF50",
-  architecture: "#64B5F6",
-  devops: "#A78BFA",
-  database: "#F472B6",
-};
 
 export default function AllBlogs() {
   const router = useRouter();
@@ -115,7 +108,7 @@ export default function AllBlogs() {
       className="min-h-screen transition-[background,color] duration-[350ms]"
       style={{ background: bg, color: text, paddingTop: "64px" }}
     >
-      <div className="allblogs-container max-w-[900px] mx-auto px-5 pt-[100px] pb-[80px]">
+      <div className="allblogs-container max-w-[900px] mx-auto px-5 pt-12 pb-20">
 
         {/* Header */}
         <div className="mb-12">
@@ -218,7 +211,7 @@ export default function AllBlogs() {
                   }}
                 >
                   {post.coverImage && (
-                    <div className="blog-list-thumbnail shrink-0 w-[110px] self-stretch rounded-lg overflow-hidden">
+                    <div className="blog-list-thumbnail shrink-0 w-[110px] h-[110px] rounded-lg overflow-hidden">
                       <img
                         src={post.coverImage}
                         alt={post.title}
@@ -226,7 +219,7 @@ export default function AllBlogs() {
                       />
                     </div>
                   )}
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0 flex flex-col">
                     <div className="flex justify-between items-center mb-2.5 flex-wrap gap-2">
                       {post.category && (
                         <span
@@ -265,7 +258,7 @@ export default function AllBlogs() {
                     </h2>
 
                     <p
-                      className="font-sans text-[0.875rem] leading-[1.75] mb-0 line-clamp-2 transition-colors duration-[350ms]"
+                      className="hidden font-sans text-[0.875rem] leading-[1.75] mb-0 line-clamp-2 transition-colors duration-350"
                       style={{
                         color: textMuted,
                         marginBottom: post.tags ? "1rem" : 0,
@@ -278,7 +271,7 @@ export default function AllBlogs() {
                       try {
                         const parsed: string[] = JSON.parse(post.tags);
                         return (
-                          <div className="flex gap-1.5 flex-wrap">
+                          <div className="flex gap-1.5 flex-wrap mt-auto pt-1">
                             {parsed.map((tag, idx) => (
                               <span
                                 key={idx}

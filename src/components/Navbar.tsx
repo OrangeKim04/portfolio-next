@@ -7,6 +7,9 @@ import { useTheme, useThemeColors } from "@/contexts/ThemeContext";
 
 const navItems = [
   { label: "Home", href: "#hero" },
+  // { label: "About", href: "#about" },
+  // { label: "Skills", href: "#skills" },
+  // { label: "Projects", href: "#projects" },
   { label: "Blog", href: "#blog" },
 ];
 
@@ -144,20 +147,51 @@ export default function Navbar() {
           </ul>
         )}
 
-        {/* Hamburger (mobile only) */}
-        {isMobile && isHomePage && (
-          <button
-            onClick={() => setMobileOpen(prev => !prev)}
-            className="flex items-center justify-center cursor-pointer rounded p-[0.4rem] transition-[border-color,background] duration-200"
-            style={{
-              background: "none",
-              border: "1px solid rgba(255,140,66,0.25)",
-              color: "#E2E8F0",
-            }}
-            aria-label={mobileOpen ? "메뉴 닫기" : "메뉴 열기"}
-          >
-            {mobileOpen ? <X size={22} color="#FF8C42" /> : <Menu size={22} />}
-          </button>
+        {/* Mobile right side */}
+        {isMobile && (
+          <div className="flex items-center gap-2">
+            {showThemeToggle && (
+              <button
+                onClick={toggleTheme}
+                aria-label="테마 전환"
+                className="relative flex items-center justify-between shrink-0 cursor-pointer px-1.5 rounded-full transition-[background,border-color] duration-300"
+                style={{
+                  width: "52px",
+                  height: "26px",
+                  background: isDark ? "rgba(255,209,102,0.12)" : "rgba(160,100,0,0.08)",
+                  border: `1px solid ${isDark ? "rgba(255,209,102,0.4)" : "rgba(160,100,0,0.45)"}`,
+                }}
+              >
+                <Moon size={10} color={isDark ? "rgba(255,209,102,0.4)" : "rgba(160,100,0,0.4)"} />
+                <Sun  size={10} color={isDark ? "rgba(255,209,102,0.4)" : "rgba(160,100,0,0.4)"} />
+                <span
+                  className="absolute top-0.75 w-5 h-5 rounded-full flex items-center justify-center pointer-events-none transition-[left] duration-300"
+                  style={{
+                    left: isDark ? "3px" : "calc(100% - 23px)",
+                    background: "#FFD166",
+                    boxShadow: "0 2px 8px rgba(255,209,102,0.6)",
+                    transitionTimingFunction: "cubic-bezier(0.34,1.56,0.64,1)",
+                  }}
+                >
+                  {isDark ? <Moon size={9} color="white" /> : <Sun size={9} color="white" />}
+                </span>
+              </button>
+            )}
+            {isHomePage && (
+              <button
+                onClick={() => setMobileOpen(prev => !prev)}
+                className="flex items-center justify-center cursor-pointer rounded p-[0.4rem] transition-[border-color,background] duration-200"
+                style={{
+                  background: "none",
+                  border: "1px solid rgba(255,140,66,0.25)",
+                  color: "#E2E8F0",
+                }}
+                aria-label={mobileOpen ? "메뉴 닫기" : "메뉴 열기"}
+              >
+                {mobileOpen ? <X size={22} color="#FF8C42" /> : <Menu size={22} />}
+              </button>
+            )}
+          </div>
         )}
       </nav>
 
