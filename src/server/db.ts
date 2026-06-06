@@ -9,14 +9,18 @@ let _db: LibSQLDatabase | null = null;
 
 export function getDb(): LibSQLDatabase | null {
   if (!_db) {
-    const dbUrl = process.env.DATABASE_URL ?? "file:./data/portfolio.db";
+    // Vercel 서버리스는 /tmp만 쓰기 가능
+    const defaultUrl = process.env.VERCEL
+      ? "file:/tmp/portfolio.db"
+      : "file:./data/portfolio.db";
+    const dbUrl = process.env.DATABASE_URL ?? defaultUrl;
     const normalizedUrl = dbUrl.startsWith("file:") ? dbUrl : `file:${dbUrl}`;
     const filePath = normalizedUrl.replace(/^file:/, "");
     const dir = path.dirname(filePath);
-    if (dir && dir !== "." && !fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
     try {
+      if (dir && dir !== "." && !fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
       const client = createClient({ url: normalizedUrl });
       _db = drizzle(client);
     } catch (error) {
