@@ -115,7 +115,7 @@ export default function AllBlogs() {
       className="min-h-screen transition-[background,color] duration-[350ms]"
       style={{ background: bg, color: text, paddingTop: "64px" }}
     >
-      <div className="allblogs-container max-w-[900px] mx-auto px-5 pt-[100px] pb-[80px]">
+      <div className="allblogs-container max-w-[900px] mx-auto px-5 pt-12 pb-20">
 
         {/* Header */}
         <div className="mb-12">
