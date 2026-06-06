@@ -91,70 +91,60 @@ export default function BlogPreviewSection() {
           </p>
         )}
 
-        {/* Posts — 2×2 균일 그리드 */}
+        {/* Posts — 텍스트 리스트 */}
         {!isLoading && posts.length > 0 && (
-          <div className="grid grid-cols-2 gap-5 blog-sub-grid">
+          <div className="flex flex-col gap-3">
             {posts.map((post, i) => {
               const accent = categoryColors[post.category] ?? "#FF8C42";
               return (
                 <article
                   key={post.id}
                   onClick={() => router.push(`/blog/${post.slug}`)}
-                  className="rounded-xl overflow-hidden cursor-pointer flex flex-col transition-[border-color,box-shadow,transform,opacity,background]"
+                  className="group flex items-center gap-4 px-5 py-4 rounded-xl cursor-pointer transition-[border-color,box-shadow,background,opacity,transform]"
                   style={{
                     background: bgCard,
                     border: `1px solid ${cardBorder}`,
                     opacity: visible ? 1 : 0,
-                    transform: visible ? "translateY(0)" : "translateY(24px)",
-                    transitionDuration: "0.15s, 0.15s, 0.15s, 0.55s, 0.35s",
-                    transitionDelay: `0s, 0s, 0s, ${i * 0.08}s, 0s`,
+                    transform: visible ? "translateX(0)" : "translateX(-16px)",
+                    transitionDuration: "0.2s, 0.2s, 0.35s, 0.5s, 0.5s",
+                    transitionDelay: `0s, 0s, 0s, ${i * 0.08}s, ${i * 0.08}s`,
                   }}
                   onMouseEnter={e => {
-                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,140,66,0.4)";
-                    (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)";
-                    (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 36px rgba(255,140,66,0.1)";
+                    (e.currentTarget as HTMLElement).style.borderColor = `${accent}60`;
+                    (e.currentTarget as HTMLElement).style.boxShadow = `0 4px 20px ${accent}18`;
                   }}
                   onMouseLeave={e => {
                     (e.currentTarget as HTMLElement).style.borderColor = cardBorder;
-                    (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
                     (e.currentTarget as HTMLElement).style.boxShadow = "none";
                   }}
                 >
-                  {/* 이미지 — 16:9 비율 고정 */}
-                  {post.coverImage && (
-                    <div className="relative w-full overflow-hidden" style={{ aspectRatio: "16/9" }}>
-                      <img
-                        src={post.coverImage}
-                        alt={post.title}
-                        className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                      />
-                    </div>
-                  )}
+                  {/* 카테고리 색상 도트 */}
+                  <div
+                    className="shrink-0 w-2 h-2 rounded-full"
+                    style={{ background: accent, boxShadow: `0 0 6px ${accent}80` }}
+                  />
 
-                  {/* 콘텐츠 */}
-                  <div className="flex flex-col flex-1 p-5">
-                    {/* 카테고리 + 날짜 */}
-                    <div className="flex items-center justify-between mb-3">
-                      {post.category && (
-                        <span
-                          className="font-mono text-[0.65rem] px-2 py-0.5 rounded-sm"
-                          style={{ color: accent, border: `1px solid ${accent}40`, background: `${accent}10` }}
-                        >
-                          {post.category}
-                        </span>
-                      )}
-                      <span className="font-mono text-[0.62rem]" style={{ color: textFaint }}>
-                        {new Date(post.publishedAt).toLocaleDateString("ko-KR", { year: "numeric", month: "short", day: "numeric" })}
+                  {/* 제목 */}
+                  <h3
+                    className="flex-1 font-sans font-medium leading-snug line-clamp-1 transition-colors duration-200 min-w-0"
+                    style={{ fontSize: "0.92rem", color: text }}
+                  >
+                    {post.title}
+                  </h3>
+
+                  {/* 카테고리 + 날짜 */}
+                  <div className="shrink-0 flex items-center gap-3">
+                    {post.category && (
+                      <span
+                        className="hidden sm:block font-mono text-[0.63rem] px-2 py-0.5 rounded-sm"
+                        style={{ color: accent, border: `1px solid ${accent}40`, background: `${accent}10` }}
+                      >
+                        {post.category}
                       </span>
-                    </div>
-
-                    {/* 제목 */}
-                    <h3
-                      className="font-display font-semibold leading-snug line-clamp-2 transition-colors duration-350"
-                      style={{ fontSize: "0.95rem", color: text }}
-                    >
-                      {post.title}
-                    </h3>
+                    )}
+                    <span className="font-mono text-[0.62rem] whitespace-nowrap" style={{ color: textFaint }}>
+                      {new Date(post.publishedAt).toLocaleDateString("ko-KR", { month: "short", day: "numeric" })}
+                    </span>
                   </div>
                 </article>
               );
