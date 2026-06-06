@@ -7,7 +7,7 @@
  */
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Github, ExternalLink, Star } from "lucide-react";
+import { Code2, ExternalLink, Star } from "lucide-react";
 
 const THUMB_1 = "https://d2xsxph8kpxj0f.cloudfront.net/310519663623383809/ZiuXtF6r9qxuu4WpJaGtpX/project-thumb-1-BVTnggJ7ZXJwKccGzcDR8J.webp";
 const THUMB_2 = "https://d2xsxph8kpxj0f.cloudfront.net/310519663623383809/ZiuXtF6r9qxuu4WpJaGtpX/project-thumb-2-AJsfk7G69qcSHSFzX7tqu8.webp";
@@ -166,7 +166,7 @@ function ProjectCard({ project, index, visible }: ProjectCardProps) {
         onMouseEnter={(e) => (e.currentTarget.style.color = "#FF8C42")}
         onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(226,232,240,0.6)")}
       >
-        <Github size={14} />
+        <Code2 size={14} />
         GitHub
       </a>
       {project.demo && (
