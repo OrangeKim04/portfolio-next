@@ -265,7 +265,7 @@ export default function AllBlogs() {
                     </h2>
 
                     <p
-                      className="font-sans text-[0.875rem] leading-[1.75] mb-0 line-clamp-2 transition-colors duration-[350ms]"
+                      className="hidden sm:block font-sans text-[0.875rem] leading-[1.75] mb-0 line-clamp-2 transition-colors duration-350"
                       style={{
                         color: textMuted,
                         marginBottom: post.tags ? "1rem" : 0,
