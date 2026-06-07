@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
+import { useThemeColors } from "@/contexts/ThemeContext";
 
 const STEPS = [
   { text: "$ connecting to notion.api...", delay: 0 },
@@ -24,6 +25,14 @@ function ProgressBar({ pct }: { pct: number }) {
 }
 
 export default function TerminalLoader({ compact = false }: { compact?: boolean }) {
+  const { bg, isDark: isDarkCtx } = useThemeColors();
+  const [isDark, setIsDark] = useState(isDarkCtx);
+
+  // context보다 먼저 DOM/localStorage에서 직접 읽어 타이밍 문제 해결
+  useLayoutEffect(() => {
+    const stored = localStorage.getItem("theme");
+    setIsDark(stored !== "light");
+  }, []);
   const [visibleLines, setVisibleLines] = useState<number[]>([]);
   const [typedIdx, setTypedIdx] = useState(0);
   const [typedText, setTypedText] = useState("");
@@ -64,15 +73,21 @@ export default function TerminalLoader({ compact = false }: { compact?: boolean 
   }, [pct]);
 
   return (
-    <div className={compact ? "flex justify-center py-12" : "min-h-screen flex items-center justify-center"} style={compact ? undefined : { background: "#0A0F1E" }}>
+    <div className={compact ? "flex justify-center py-12" : "min-h-screen flex items-center justify-center"} style={compact ? undefined : { background: bg }}>
       <div
         className="w-full max-w-md rounded-xl overflow-hidden"
-        style={{ border: "1px solid rgba(255,140,66,0.25)" }}
+        style={{
+          border: isDark ? "1px solid rgba(255,140,66,0.25)" : "1px solid rgba(255,105,180,0.6)",
+          boxShadow: isDark ? "none" : "0 4px 24px rgba(255,105,180,0.15)",
+        }}
       >
         {/* 터미널 헤더 */}
         <div
           className="flex items-center gap-2 px-4 py-3"
-          style={{ background: "rgba(255,255,255,0.04)", borderBottom: "1px solid rgba(255,140,66,0.15)" }}
+          style={{
+            background: isDark ? "rgba(255,255,255,0.04)" : "rgba(255,105,180,0.12)",
+            borderBottom: isDark ? "1px solid rgba(255,140,66,0.15)" : "1px solid rgba(255,105,180,0.3)",
+          }}
         >
           <span className="w-3 h-3 rounded-full bg-red-500/70" />
           <span className="w-3 h-3 rounded-full bg-yellow-400/70" />
