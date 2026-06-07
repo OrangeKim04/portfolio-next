@@ -18,6 +18,7 @@ export default function BlogDetailPage() {
   const router = useRouter();
   const [liked, setLiked] = useState(false);
   const [tocItems, setTocItems] = useState<Array<{ level: number; text: string; id: string }>>([]);
+  const [activeId, setActiveId] = useState<string>("");
   const contentRef = useRef<HTMLDivElement>(null);
   const { isDark, bg, bgCard, text, textMuted, textFaint, border, navBg } = useThemeColors();
 
@@ -44,6 +45,24 @@ export default function BlogDetailPage() {
     }, 50);
     return () => clearTimeout(timer);
   }, [post?.content]);
+
+  // 스크롤 스파이 — 뷰포트 상단 20% 구간에 들어온 헤딩을 활성화
+  useEffect(() => {
+    if (tocItems.length === 0) return;
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) setActiveId(entry.target.id);
+        });
+      },
+      { rootMargin: "-10% 0px -80% 0px" }
+    );
+    tocItems.forEach(({ id }) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, [tocItems]);
 
   const likeMutation = trpc.blog.like.useMutation({
     onSuccess: () => { setLiked(true); toast.success("좋아요!"); },
@@ -257,28 +276,32 @@ export default function BlogDetailPage() {
                 // 목차
               </h4>
               <nav className="flex flex-col gap-1.5">
-                {tocItems.map(item => (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      const el = document.getElementById(item.id);
-                      if (el) {
-                        window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 130, behavior: "smooth" });
-                        history.replaceState(null, "", `#${item.id}`);
-                      }
-                    }}
-                    className="bg-transparent border-none font-sans text-[0.8rem] text-left cursor-pointer py-1 pr-0 w-full transition-colors duration-150"
-                    style={{
-                      color: textMuted,
-                      paddingLeft: `calc(0.6rem + ${(item.level - 1) * 0.875}rem)`,
-                      borderLeft: `2px solid ${item.level === 1 ? "rgba(255,140,66,0.4)" : border}`,
-                    }}
-                    onMouseEnter={e => (e.currentTarget.style.color = "#FF8C42")}
-                    onMouseLeave={e => (e.currentTarget.style.color = textMuted)}
-                  >
-                    {item.text}
-                  </button>
-                ))}
+                {tocItems.map(item => {
+                  const isActive = activeId === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        const el = document.getElementById(item.id);
+                        if (el) {
+                          window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 130, behavior: "smooth" });
+                          history.replaceState(null, "", `#${item.id}`);
+                        }
+                      }}
+                      className="bg-transparent border-none font-sans text-[0.8rem] text-left cursor-pointer py-1 pr-0 w-full transition-[color,border-color,font-weight] duration-150"
+                      style={{
+                        color: isActive ? "#FF8C42" : textMuted,
+                        fontWeight: isActive ? 600 : 400,
+                        paddingLeft: `calc(0.6rem + ${(item.level - 1) * 0.875}rem)`,
+                        borderLeft: `2px solid ${isActive ? "#FF8C42" : item.level === 1 ? "rgba(255,140,66,0.25)" : border}`,
+                      }}
+                      onMouseEnter={e => { if (!isActive) e.currentTarget.style.color = "#FF8C42"; }}
+                      onMouseLeave={e => { if (!isActive) e.currentTarget.style.color = textMuted; }}
+                    >
+                      {item.text}
+                    </button>
+                  );
+                })}
               </nav>
             </div>
           </aside>
