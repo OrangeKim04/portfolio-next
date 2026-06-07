@@ -77,7 +77,10 @@ export default function TerminalLoader({ compact = false }: { compact?: boolean 
         {/* 터미널 헤더 */}
         <div
           className="flex items-center gap-2 px-4 py-3"
-          style={{ background: "rgba(255,255,255,0.04)", borderBottom: "1px solid rgba(255,140,66,0.15)" }}
+          style={{
+            background: isDark ? "rgba(255,255,255,0.04)" : "rgba(255,105,180,0.12)",
+            borderBottom: isDark ? "1px solid rgba(255,140,66,0.15)" : "1px solid rgba(255,105,180,0.3)",
+          }}
         >
           <span className="w-3 h-3 rounded-full bg-red-500/70" />
           <span className="w-3 h-3 rounded-full bg-yellow-400/70" />
