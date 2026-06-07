@@ -129,6 +129,18 @@ export default function AllBlogs() {
           >
             블로그
           </h1>
+          {!searchQuery && blogData?.pagination && (
+            <p className="font-mono text-[0.75rem]" style={{ color: "rgba(255,140,66,0.6)" }}>
+              {selectedCategory
+                ? `${selectedCategory} · 총 ${blogData.pagination.total}개`
+                : `전체 · 총 ${blogData.pagination.total}개`}
+            </p>
+          )}
+          {searchQuery && searchResults && (
+            <p className="font-mono text-[0.75rem]" style={{ color: "rgba(255,140,66,0.6)" }}>
+              &quot;{searchQuery}&quot; 검색 결과 · {searchResults.length}개
+            </p>
+          )}
         </div>
 
         {/* Search */}
