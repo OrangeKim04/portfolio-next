@@ -134,11 +134,6 @@
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
-@keyframes tangerine-fall {
-  0%   { transform: translateY(-60px) rotate(0deg); opacity: 1; }
-  85%  { opacity: 1; }
-  100% { transform: translateY(115vh) rotate(540deg); opacity: 0; }
-}
 @keyframes happy-pop {
   0%   { transform: scale(0) rotate(-12deg); opacity: 0; }
   55%  { transform: scale(1.25) rotate(4deg); opacity: 1; }
