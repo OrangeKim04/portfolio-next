@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useThemeColors } from "@/contexts/ThemeContext";
 
 const STEPS = [
@@ -25,7 +25,14 @@ function ProgressBar({ pct }: { pct: number }) {
 }
 
 export default function TerminalLoader({ compact = false }: { compact?: boolean }) {
-  const { bg, isDark } = useThemeColors();
+  const { bg, isDark: isDarkCtx } = useThemeColors();
+  const [isDark, setIsDark] = useState(isDarkCtx);
+
+  // context보다 먼저 DOM/localStorage에서 직접 읽어 타이밍 문제 해결
+  useLayoutEffect(() => {
+    const stored = localStorage.getItem("theme");
+    setIsDark(stored !== "light");
+  }, []);
   const [visibleLines, setVisibleLines] = useState<number[]>([]);
   const [typedIdx, setTypedIdx] = useState(0);
   const [typedText, setTypedText] = useState("");
