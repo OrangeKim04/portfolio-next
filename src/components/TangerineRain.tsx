@@ -64,10 +64,11 @@ export default function TangerineRain({ active, onDone }: Props) {
             fontSize: "clamp(1.8rem, 7vw, 5rem)",
             color: "#4CAF50",
             textShadow: [
-              "0 0 20px rgba(255,209,102,0.95)",
-              "0 0 40px rgba(255,209,102,0.8)",
-              "0 0 80px rgba(255,209,102,0.5)",
-              "0 0 140px rgba(255,209,102,0.25)",
+              "0 0 10px #fff700",
+              "0 0 25px #ffff00",
+              "0 0 55px #ffee00",
+              "0 0 100px rgba(255,240,0,0.6)",
+              "0 0 160px rgba(255,230,0,0.3)",
             ].join(", "),
             letterSpacing: "0.04em",
           }}
