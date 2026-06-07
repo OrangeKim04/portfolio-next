@@ -25,7 +25,7 @@ function ProgressBar({ pct }: { pct: number }) {
 }
 
 export default function TerminalLoader({ compact = false }: { compact?: boolean }) {
-  const { bg } = useThemeColors();
+  const { bg, isDark } = useThemeColors();
   const [visibleLines, setVisibleLines] = useState<number[]>([]);
   const [typedIdx, setTypedIdx] = useState(0);
   const [typedText, setTypedText] = useState("");
@@ -69,7 +69,10 @@ export default function TerminalLoader({ compact = false }: { compact?: boolean 
     <div className={compact ? "flex justify-center py-12" : "min-h-screen flex items-center justify-center"} style={compact ? undefined : { background: bg }}>
       <div
         className="w-full max-w-md rounded-xl overflow-hidden"
-        style={{ border: "1px solid rgba(255,140,66,0.25)" }}
+        style={{
+          border: isDark ? "1px solid rgba(255,140,66,0.25)" : "1px solid rgba(255,105,180,0.6)",
+          boxShadow: isDark ? "none" : "0 4px 24px rgba(255,105,180,0.15)",
+        }}
       >
         {/* 터미널 헤더 */}
         <div
