@@ -75,7 +75,7 @@ export default function TerminalLoader({ compact = false }: { compact?: boolean 
   return (
     <div className={compact ? "flex justify-center py-12" : "min-h-screen flex items-center justify-center"} style={compact ? undefined : { background: bg }}>
       <div
-        className="w-full max-w-md rounded-xl overflow-hidden"
+        className="w-4/5 sm:w-full sm:max-w-md rounded-xl overflow-hidden"
         style={{
           border: isDark ? "1px solid rgba(255,140,66,0.25)" : "1px solid rgba(255,105,180,0.6)",
           boxShadow: isDark ? "none" : "0 4px 24px rgba(255,105,180,0.15)",
