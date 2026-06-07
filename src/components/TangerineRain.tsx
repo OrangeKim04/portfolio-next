@@ -3,13 +3,15 @@
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
+type AnimType = "tangerine-fall" | "tangerine-left" | "tangerine-right";
+
 interface Tangerine {
   id: number;
   x: number;
   size: number;
   duration: number;
   delay: number;
-  spin: number;
+  anim: AnimType;
 }
 
 interface Props {
@@ -17,25 +19,39 @@ interface Props {
   onDone: () => void;
 }
 
+function mkTangerines(): Tangerine[] {
+  const total = 28;
+  return Array.from({ length: total }, (_, i) => {
+    const roll = Math.random();
+    const anim: AnimType =
+      i < 3 ? "tangerine-left" :
+      i < 6 ? "tangerine-right" :
+      "tangerine-fall";
+    return {
+      id: i,
+      x: anim === "tangerine-left"  ? 0 :
+         anim === "tangerine-right" ? 100 :
+         Math.random() * 92 + 4,
+      size: Math.random() * 22 + 22,
+      duration: Math.random() * 1.4 + 2.2,
+      delay: roll * 1.6,
+      anim,
+    };
+  });
+}
+
 export default function TangerineRain({ active, onDone }: Props) {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (!active) return;
-    timerRef.current = setTimeout(onDone, 3500);
+    timerRef.current = setTimeout(onDone, 5000);
     return () => { if (timerRef.current) clearTimeout(timerRef.current); };
   }, [active, onDone]);
 
   if (!active) return null;
 
-  const tangerines: Tangerine[] = Array.from({ length: 12 }, (_, i) => ({
-    id: i,
-    x: Math.random() * 90 + 5,
-    size: Math.random() * 20 + 24,
-    duration: Math.random() * 1.5 + 2,
-    delay: Math.random() * 1.2,
-    spin: Math.random() > 0.5 ? 360 : -360,
-  }));
+  const tangerines = mkTangerines();
 
   return createPortal(
     <div className="fixed inset-0 pointer-events-none z-[9999] overflow-hidden">
@@ -45,10 +61,11 @@ export default function TangerineRain({ active, onDone }: Props) {
           style={{
             position: "absolute",
             left: `${t.x}%`,
-            top: "-60px",
+            top: 0,
             fontSize: `${t.size}px`,
-            animation: `tangerine-fall ${t.duration}s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${t.delay}s forwards`,
+            animation: `${t.anim} ${t.duration}s cubic-bezier(0.34, 1.56, 0.64, 1) ${t.delay}s both`,
             lineHeight: 1,
+            willChange: "transform, opacity",
           }}
         >
           🍊
