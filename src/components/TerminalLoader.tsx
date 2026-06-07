@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useThemeColors } from "@/contexts/ThemeContext";
+import { usePageLoading } from "@/contexts/LoadingContext";
 
 const STEPS = [
   { text: "$ connecting to notion.api...", delay: 0 },
@@ -26,7 +27,13 @@ function ProgressBar({ pct }: { pct: number }) {
 
 export default function TerminalLoader({ compact = false }: { compact?: boolean }) {
   const { bg, isDark: isDarkCtx } = useThemeColors();
+  const { setIsPageLoading } = usePageLoading();
   const [isDark, setIsDark] = useState(isDarkCtx);
+
+  useEffect(() => {
+    setIsPageLoading(true);
+    return () => setIsPageLoading(false);
+  }, [setIsPageLoading]);
 
   // context보다 먼저 DOM/localStorage에서 직접 읽어 타이밍 문제 해결
   useLayoutEffect(() => {
