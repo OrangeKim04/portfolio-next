@@ -10,10 +10,15 @@ interface Props {
 }
 
 function fireConfetti() {
-  const tangerine = confetti.shapeFromText({ text: "🍊", scalar: 3 });
+  const shapes = [
+    confetti.shapeFromText({ text: "🍊", scalar: 3 }),
+    confetti.shapeFromText({ text: "🍀", scalar: 3 }),
+    confetti.shapeFromText({ text: "💛", scalar: 3 }),
+    confetti.shapeFromText({ text: "🧡", scalar: 3 }),
+  ];
 
   const defaults = {
-    shapes: [tangerine],
+    shapes,
     scalar: 3,
     flat: false,
   };
