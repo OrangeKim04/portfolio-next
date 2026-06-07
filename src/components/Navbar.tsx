@@ -147,6 +147,35 @@ export default function Navbar() {
           </ul>
         )}
 
+        {/* Desktop Theme Toggle (비홈 페이지) */}
+        {!isMobile && !isHomePage && (
+          <button
+            onClick={toggleTheme}
+            aria-label="테마 전환"
+            className="relative flex items-center justify-between shrink-0 cursor-pointer px-1.5 rounded-full transition-[background,border-color] duration-300"
+            style={{
+              width: "60px",
+              height: "30px",
+              background: isDark ? "rgba(255,209,102,0.12)" : "rgba(160,100,0,0.08)",
+              border: `1px solid ${isDark ? "rgba(255,209,102,0.4)" : "rgba(160,100,0,0.45)"}`,
+            }}
+          >
+            <Moon size={12} color={isDark ? "rgba(255,209,102,0.4)" : "rgba(160,100,0,0.4)"} />
+            <Sun  size={12} color={isDark ? "rgba(255,209,102,0.4)" : "rgba(160,100,0,0.4)"} />
+            <span
+              className="absolute top-0.75 w-6 h-6 rounded-full flex items-center justify-center pointer-events-none transition-[left] duration-300"
+              style={{
+                left: isDark ? "3px" : "calc(100% - 27px)",
+                background: "#FFD166",
+                boxShadow: "0 2px 8px rgba(255,209,102,0.6)",
+                transitionTimingFunction: "cubic-bezier(0.34,1.56,0.64,1)",
+              }}
+            >
+              {isDark ? <Moon size={11} color="white" /> : <Sun size={11} color="white" />}
+            </span>
+          </button>
+        )}
+
         {/* Mobile right side */}
         {isMobile && (
           <div className="flex items-center gap-2">
