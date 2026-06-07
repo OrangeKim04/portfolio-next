@@ -5,6 +5,7 @@ import { Menu, X, Terminal, Sun, Moon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme, useThemeColors } from "@/contexts/ThemeContext";
 import { usePageLoading } from "@/contexts/LoadingContext";
+import TangerineRain from "@/components/TangerineRain";
 
 const navItems = [
   { label: "Home", href: "#hero" },
@@ -26,6 +27,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [isMobile, setIsMobile] = useState(false);
+  const [tangerineActive, setTangerineActive] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -91,7 +93,13 @@ export default function Navbar() {
           }}
           className="flex items-center gap-2 no-underline"
         >
-          <Terminal size={18} color="#FF8C42" />
+          <span
+            onClick={e => { e.preventDefault(); e.stopPropagation(); setTangerineActive(true); }}
+            className="cursor-pointer select-none"
+            title="🍊"
+          >
+            <Terminal size={18} color="#FF8C42" />
+          </span>
           <span className="font-mono text-[0.9rem] font-bold tracking-wider text-tangerine">
             dev.portfolio
           </span>
@@ -99,6 +107,8 @@ export default function Navbar() {
             ~$
           </span>
         </a>
+
+        <TangerineRain active={tangerineActive} onDone={() => setTangerineActive(false)} />
 
         {/* Desktop Nav + Theme Toggle */}
         {!isMobile && isHomePage && (
