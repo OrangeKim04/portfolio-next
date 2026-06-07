@@ -53,22 +53,27 @@ export default function TangerineRain({ active, onDone }: Props) {
 
       {/* 🍀 행복하세요 오버레이 */}
       <div
-        className="absolute inset-0 flex flex-col items-center justify-center gap-4"
+        className="absolute inset-0 flex items-center justify-center px-4"
         style={{
           animation: "happy-pop 3s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both",
         }}
       >
-        <span style={{ fontSize: "80px", lineHeight: 1 }}>🍀</span>
         <span
-          className="font-display font-bold text-center"
+          className="font-display font-bold whitespace-nowrap flex items-center gap-3"
           style={{
-            fontSize: "clamp(2.5rem, 8vw, 5rem)",
+            fontSize: "clamp(1.8rem, 7vw, 5rem)",
             color: "#4CAF50",
-            textShadow: "0 0 40px rgba(76,175,80,0.5), 0 4px 20px rgba(0,0,0,0.3)",
-            letterSpacing: "0.05em",
+            textShadow: [
+              "0 0 20px rgba(76,175,80,0.9)",
+              "0 0 40px rgba(76,175,80,0.7)",
+              "0 0 80px rgba(76,175,80,0.4)",
+              "0 0 120px rgba(76,175,80,0.2)",
+            ].join(", "),
+            letterSpacing: "0.04em",
           }}
         >
           행복하세요
+          <span style={{ fontSize: "clamp(1.5rem, 6vw, 4rem)", lineHeight: 1 }}>🍀</span>
         </span>
       </div>
     </div>,
