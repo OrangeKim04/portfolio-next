@@ -12,6 +12,7 @@ function GithubIcon({ size = 20 }: { size?: number }) {
 }
 import { toast } from "sonner";
 import HeroBackground from "@/components/HeroBackground";
+import MagneticParticles from "@/components/MagneticParticles";
 
 const TYPING_TEXTS = [
   "Backend Developer",
@@ -74,6 +75,7 @@ export default function HeroSection() {
       }}
     >
       <HeroBackground />
+      <MagneticParticles />
 
       <div
         style={{

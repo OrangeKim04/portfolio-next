@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { Menu, X, Terminal, Sun, Moon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme, useThemeColors } from "@/contexts/ThemeContext";
+import { usePageLoading } from "@/contexts/LoadingContext";
+import TangerineRain from "@/components/TangerineRain";
 
 const navItems = [
   { label: "Home", href: "#hero" },
@@ -19,11 +21,13 @@ export default function Navbar() {
   const isHomePage = pathname === "/";
   const { toggleTheme } = useTheme();
   const { isDark, text, textMuted, navBg, border } = useThemeColors();
+  const { isPageLoading } = usePageLoading();
 
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [isMobile, setIsMobile] = useState(false);
+  const [tangerineActive, setTangerineActive] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -67,12 +71,12 @@ export default function Navbar() {
     if (el) setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 10);
   };
 
-  const showThemeToggle = !isHomePage || activeSection === "blog";
+  const showThemeToggle = (!isHomePage || activeSection === "blog") && !isPageLoading;
 
   return (
     <>
       <nav
-        className="fixed top-0 left-0 right-0 z-[100] px-8 h-16 flex items-center justify-between transition-[background,backdrop-filter,border-color] duration-300"
+        className="fixed top-0 left-0 right-0 z-100 px-8 h-16 flex items-center justify-between transition-[background,backdrop-filter,border-color] duration-300"
         style={{
           background: scrolled || mobileOpen ? navBg : "transparent",
           backdropFilter: scrolled || mobileOpen ? "blur(16px)" : "none",
@@ -89,7 +93,13 @@ export default function Navbar() {
           }}
           className="flex items-center gap-2 no-underline"
         >
-          <Terminal size={18} color="#FF8C42" />
+          <span
+            onClick={e => { e.preventDefault(); e.stopPropagation(); setTangerineActive(true); }}
+            className="cursor-pointer select-none"
+            title="🍊"
+          >
+            <Terminal size={18} color="#FF8C42" />
+          </span>
           <span className="font-mono text-[0.9rem] font-bold tracking-wider text-tangerine">
             dev.portfolio
           </span>
@@ -97,6 +107,8 @@ export default function Navbar() {
             ~$
           </span>
         </a>
+
+        <TangerineRain active={tangerineActive} onDone={() => setTangerineActive(false)} />
 
         {/* Desktop Nav + Theme Toggle */}
         {!isMobile && isHomePage && (
@@ -148,7 +160,7 @@ export default function Navbar() {
         )}
 
         {/* Desktop Theme Toggle (비홈 페이지) */}
-        {!isMobile && !isHomePage && (
+        {!isMobile && !isHomePage && !isPageLoading && (
           <button
             onClick={toggleTheme}
             aria-label="테마 전환"
@@ -229,7 +241,7 @@ export default function Navbar() {
         <>
           <div
             onClick={() => setMobileOpen(false)}
-            className="fixed inset-0 z-[98] transition-opacity duration-[250ms]"
+            className="fixed inset-0 z-98 transition-opacity duration-250"
             style={{
               background: "rgba(0,0,0,0.5)",
               opacity: mobileOpen ? 1 : 0,
@@ -237,7 +249,7 @@ export default function Navbar() {
             }}
           />
           <div
-            className="fixed top-16 left-0 right-0 z-[99] px-6 pt-5 pb-7 transition-[transform,opacity] duration-[250ms]"
+            className="fixed top-16 left-0 right-0 z-99 px-6 pt-5 pb-7 transition-[transform,opacity] duration-250"
             style={{
               background: "rgba(10, 15, 30, 0.98)",
               backdropFilter: "blur(20px)",
@@ -262,7 +274,7 @@ export default function Navbar() {
                       }}
                     >
                       <span
-                        className="font-mono text-[0.65rem] min-w-[1.5rem]"
+                        className="font-mono text-[0.65rem] min-w-6"
                         style={{ color: isActive ? "#FF8C42" : "rgba(255,140,66,0.35)" }}
                       >
                         0{i + 1}

@@ -20,6 +20,7 @@ export default function BlogDetailPage() {
   const [tocItems, setTocItems] = useState<Array<{ level: number; text: string; id: string }>>([]);
   const [activeId, setActiveId] = useState<string>("");
   const contentRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
   const { isDark, bg, bgCard, text, textMuted, textFaint, border, navBg } = useThemeColors();
 
   const slug = params?.id ?? "";
@@ -63,6 +64,23 @@ export default function BlogDetailPage() {
     });
     return () => observer.disconnect();
   }, [tocItems]);
+
+  // 끝까지 읽기 감지
+  useEffect(() => {
+    const el = bottomRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          toast("끝까지 읽으셨군요 🍊", { duration: 3000 });
+          observer.disconnect();
+        }
+      },
+      { threshold: 1.0 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [post]);
 
   const likeMutation = trpc.blog.like.useMutation({
     onSuccess: () => { setLiked(true); toast.success("좋아요!"); },
@@ -260,6 +278,7 @@ export default function BlogDetailPage() {
               공유
             </button>
           </div>
+          <div ref={bottomRef} className="h-px" />
         </article>
 
         {/* TOC */}

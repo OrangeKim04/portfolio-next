@@ -134,6 +134,16 @@
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
+@keyframes happy-pop {
+  0%   { transform: scale(0) rotate(-12deg); opacity: 0; }
+  55%  { transform: scale(1.25) rotate(4deg); opacity: 1; }
+  70%  { transform: scale(0.93) rotate(-2deg); }
+  80%  { transform: scale(1.07) rotate(1deg); }
+  88%  { transform: scale(0.98) rotate(0deg); }
+  93%  { transform: scale(1) rotate(0deg); opacity: 1; }
+  97%  { transform: scale(1) rotate(0deg); opacity: 1; }
+  100% { transform: scale(0.7) rotate(8deg); opacity: 0; }
+}
 
 /* Responsive */
 @media (max-width: 1024px) {

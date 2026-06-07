@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useThemeColors } from "@/contexts/ThemeContext";
+import { usePageLoading } from "@/contexts/LoadingContext";
 
 const STEPS = [
   { text: "$ connecting to notion.api...", delay: 0 },
@@ -26,7 +27,13 @@ function ProgressBar({ pct }: { pct: number }) {
 
 export default function TerminalLoader({ compact = false }: { compact?: boolean }) {
   const { bg, isDark: isDarkCtx } = useThemeColors();
+  const { setIsPageLoading } = usePageLoading();
   const [isDark, setIsDark] = useState(isDarkCtx);
+
+  useEffect(() => {
+    setIsPageLoading(true);
+    return () => setIsPageLoading(false);
+  }, [setIsPageLoading]);
 
   // context보다 먼저 DOM/localStorage에서 직접 읽어 타이밍 문제 해결
   useLayoutEffect(() => {
@@ -75,7 +82,7 @@ export default function TerminalLoader({ compact = false }: { compact?: boolean 
   return (
     <div className={compact ? "flex justify-center py-12" : "min-h-screen flex items-center justify-center"} style={compact ? undefined : { background: bg }}>
       <div
-        className="w-full max-w-md rounded-xl overflow-hidden"
+        className="w-4/5 sm:w-full sm:max-w-md rounded-xl overflow-hidden"
         style={{
           border: isDark ? "1px solid rgba(255,140,66,0.25)" : "1px solid rgba(255,105,180,0.6)",
           boxShadow: isDark ? "none" : "0 4px 24px rgba(255,105,180,0.15)",

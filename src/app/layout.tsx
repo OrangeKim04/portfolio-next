@@ -3,6 +3,7 @@ import { DM_Sans, Space_Grotesk, JetBrains_Mono, Noto_Sans_KR } from "next/font/
 import "./globals.css";
 import { Providers } from "./providers";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { LoadingProvider } from "@/contexts/LoadingContext";
 import Navbar from "@/components/Navbar";
 import { Toaster } from "sonner";
 import Script from "next/script";
@@ -45,11 +46,13 @@ export default function RootLayout({
           </>
         )}
         <ThemeProvider defaultTheme="dark" switchable>
-          <Providers>
-            <Navbar />
-            {children}
-            <Toaster />
-          </Providers>
+          <LoadingProvider>
+            <Providers>
+              <Navbar />
+              {children}
+              <Toaster />
+            </Providers>
+          </LoadingProvider>
         </ThemeProvider>
       </body>
     </html>
