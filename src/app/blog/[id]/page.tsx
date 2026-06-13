@@ -214,11 +214,11 @@ export default function BlogDetailPage() {
           <div
             ref={contentRef}
             className="font-sans text-base leading-[1.85] transition-colors duration-350"
-            style={{ color: textMuted }}
+            style={{ color: text }}
           >
             <MDEditor.Markdown
               source={post.content ?? ""}
-              style={{ background: "transparent", color: textMuted, transition: "color 0.35s ease" }}
+              style={{ background: "transparent", color: text, transition: "color 0.35s ease" }}
             />
           </div>
 
