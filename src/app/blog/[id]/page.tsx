@@ -219,6 +219,17 @@ export default function BlogDetailPage() {
             <MDEditor.Markdown
               source={post.content ?? ""}
               style={{ background: "transparent", color: text, transition: "color 0.35s ease" }}
+              components={{
+                img: ({ src, alt }) => (
+                  <img
+                    src={src}
+                    alt={alt ?? ""}
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="async"
+                  />
+                ),
+              }}
             />
           </div>
 
