@@ -145,6 +145,18 @@
   100% { transform: scale(0.7) rotate(8deg); opacity: 0; }
 }
 
+/* Blog markdown content images */
+.wmde-markdown img {
+  max-width: 100%;
+  max-height: 480px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  margin: 1.25rem auto;
+  display: block;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .blog-detail-grid {
