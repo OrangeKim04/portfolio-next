@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { drizzle, LibSQLDatabase } from "drizzle-orm/libsql";
 import { createClient } from "@libsql/client";
-import { blogInteractions, BlogInteraction, InsertUser, users } from "../../drizzle/schema";
+import { blogInteractions, BlogInteraction } from "../../drizzle/schema";
 import fs from "fs";
 import path from "path";
 
@@ -28,50 +28,6 @@ export function getDb(): LibSQLDatabase | null {
     }
   }
   return _db;
-}
-
-export async function upsertUser(user: InsertUser): Promise<void> {
-  if (!user.openId) throw new Error("User openId is required for upsert");
-  const db = getDb();
-  if (!db) return;
-
-  const values: InsertUser = { openId: user.openId };
-  const updateSet: Record<string, unknown> = {};
-
-  const textFields = ["name", "email", "loginMethod"] as const;
-  type TF = (typeof textFields)[number];
-  const assign = (field: TF) => {
-    if (user[field] === undefined) return;
-    values[field] = user[field] ?? null;
-    updateSet[field] = user[field] ?? null;
-  };
-  textFields.forEach(assign);
-
-  if (user.lastSignedIn !== undefined) {
-    values.lastSignedIn = user.lastSignedIn;
-    updateSet.lastSignedIn = user.lastSignedIn;
-  }
-  if (user.role !== undefined) {
-    values.role = user.role;
-    updateSet.role = user.role;
-  } else if (user.openId === (process.env.OWNER_OPEN_ID ?? "")) {
-    values.role = "admin";
-    updateSet.role = "admin";
-  }
-
-  if (!values.lastSignedIn) values.lastSignedIn = new Date();
-  if (Object.keys(updateSet).length === 0) updateSet.lastSignedIn = new Date();
-
-  await db
-    .insert(users)
-    .values(values)
-    .onConflictDoUpdate({ target: users.openId, set: updateSet as Partial<InsertUser> });
-}
-
-export async function getUserByOpenId(openId: string) {
-  const db = getDb();
-  if (!db) return undefined;
-  return (await db.select().from(users).where(eq(users.openId, openId)).limit(1))[0];
 }
 
 export async function getBlogInteraction(slug: string): Promise<BlogInteraction | undefined> {
