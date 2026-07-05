@@ -9,6 +9,7 @@ import MDEditor from "@uiw/react-md-editor";
 import { useThemeColors } from "@/contexts/ThemeContext";
 import TerminalLoader from "@/components/TerminalLoader";
 import categoryColors from "@/lib/categoryColors";
+import GiscusComments from "@/components/GiscusComments";
 
 const toHeadingId = (text: string) =>
   text.toLowerCase().replace(/[^a-z0-9가-힣\s]/g, "").replace(/\s+/g, "-").trim();
@@ -17,6 +18,7 @@ export default function BlogDetailPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const [liked, setLiked] = useState(false);
+  const [viewCount, setViewCount] = useState<number | null>(null);
   const [tocItems, setTocItems] = useState<Array<{ level: number; text: string; id: string }>>([]);
   const [activeId, setActiveId] = useState<string>("");
   const contentRef = useRef<HTMLDivElement>(null);
@@ -24,6 +26,7 @@ export default function BlogDetailPage() {
   const { isDark, bg, bgCard, text, textMuted, textFaint, border, navBg } = useThemeColors();
 
   const slug = params?.id ?? "";
+  const utils = trpc.useUtils();
 
   const { data: post, isLoading, error } = trpc.blog.getBySlug.useQuery(
     { slug },
@@ -82,15 +85,54 @@ export default function BlogDetailPage() {
     return () => observer.disconnect();
   }, [post]);
 
-  const likeMutation = trpc.blog.like.useMutation({
-    onSuccess: () => { setLiked(true); toast.success("좋아요!"); },
-  });
-  const unlikeMutation = trpc.blog.unlike.useMutation({
-    onSuccess: () => { setLiked(false); },
+  const viewMutation = trpc.blog.incrementView.useMutation({
+    onSuccess: data => {
+      setViewCount(data.viewCount);
+      utils.blog.list.invalidate();
+    },
   });
 
+  // 이 브라우저에서 이미 조회한 글이면 다시 조회수를 올리지 않음
+  useEffect(() => {
+    if (!post?.slug) return;
+    const key = `blog_viewed_${post.slug}`;
+    if (localStorage.getItem(key) === "1") return;
+    localStorage.setItem(key, "1");
+    viewMutation.mutate({ slug: post.slug });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [post?.slug]);
+
+  // 이 브라우저에서 이미 좋아요 누른 글인지 localStorage로 확인
+  useEffect(() => {
+    if (!slug) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- localStorage는 리액트 외부 저장소라 렌더 중 동기 로직으로 옮길 수 없음
+    setLiked(localStorage.getItem(`blog_liked_${slug}`) === "1");
+  }, [slug]);
+
+  const [likeCount, setLikeCount] = useState<number | null>(null);
+
+  const likeMutation = trpc.blog.like.useMutation({
+    onSuccess: data => {
+      localStorage.setItem(`blog_liked_${slug}`, "1");
+      setLiked(true);
+      setLikeCount(data.likes);
+      toast.success("좋아요!");
+      utils.blog.list.invalidate();
+    },
+  });
+  const unlikeMutation = trpc.blog.unlike.useMutation({
+    onSuccess: data => {
+      localStorage.removeItem(`blog_liked_${slug}`);
+      setLiked(false);
+      setLikeCount(data.likes);
+      utils.blog.list.invalidate();
+    },
+  });
+
+  const likeMutationPending = likeMutation.isPending || unlikeMutation.isPending;
+
   const handleLike = () => {
-    if (!post) return;
+    if (!post || likeMutationPending) return;
     if (liked) unlikeMutation.mutate({ slug: post.slug });
     else likeMutation.mutate({ slug: post.slug });
   };
@@ -186,7 +228,7 @@ export default function BlogDetailPage() {
                 className="font-mono text-[0.72rem] flex items-center gap-1 transition-colors duration-350"
                 style={{ color: textFaint }}
               >
-                <Eye size={11} /> {post.viewCount ?? 0}
+                <Eye size={11} /> {viewCount ?? post.viewCount ?? 0}
               </span>
             </div>
 
@@ -219,6 +261,17 @@ export default function BlogDetailPage() {
             <MDEditor.Markdown
               source={post.content ?? ""}
               style={{ background: "transparent", color: text, transition: "color 0.35s ease" }}
+              components={{
+                img: ({ src, alt }) => (
+                  <img
+                    src={src}
+                    alt={alt ?? ""}
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="async"
+                  />
+                ),
+              }}
             />
           </div>
 
@@ -250,16 +303,18 @@ export default function BlogDetailPage() {
           >
             <button
               onClick={handleLike}
+              disabled={likeMutationPending}
               className="flex items-center gap-2 font-sans text-[0.85rem] px-4 py-[0.45rem] rounded-md transition-all duration-200"
               style={{
                 background: liked ? "rgba(255,140,66,0.12)" : "transparent",
                 border: `1px solid ${liked ? "rgba(255,140,66,0.4)" : border}`,
                 color: liked ? "#FF8C42" : textMuted,
-                cursor: liked ? "default" : "pointer",
+                cursor: likeMutationPending ? "wait" : "pointer",
+                opacity: likeMutationPending ? 0.6 : 1,
               }}
             >
               <Heart size={15} fill={liked ? "#FF8C42" : "none"} />
-              {(post.likes ?? 0) + (liked ? 1 : 0)}
+              {likeCount ?? post.likes ?? 0}
             </button>
             <button
               onClick={handleShare}
@@ -278,6 +333,7 @@ export default function BlogDetailPage() {
               공유
             </button>
           </div>
+          <GiscusComments />
           <div ref={bottomRef} className="h-px" />
         </article>
 
