@@ -18,6 +18,7 @@ export default function BlogDetailPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const [liked, setLiked] = useState(false);
+  const [viewCount, setViewCount] = useState<number | null>(null);
   const [tocItems, setTocItems] = useState<Array<{ level: number; text: string; id: string }>>([]);
   const [activeId, setActiveId] = useState<string>("");
   const contentRef = useRef<HTMLDivElement>(null);
@@ -25,6 +26,7 @@ export default function BlogDetailPage() {
   const { isDark, bg, bgCard, text, textMuted, textFaint, border, navBg } = useThemeColors();
 
   const slug = params?.id ?? "";
+  const utils = trpc.useUtils();
 
   const { data: post, isLoading, error } = trpc.blog.getBySlug.useQuery(
     { slug },
@@ -82,6 +84,23 @@ export default function BlogDetailPage() {
     observer.observe(el);
     return () => observer.disconnect();
   }, [post]);
+
+  const viewMutation = trpc.blog.incrementView.useMutation({
+    onSuccess: data => {
+      setViewCount(data.viewCount);
+      utils.blog.list.invalidate();
+    },
+  });
+
+  // 이 브라우저에서 이미 조회한 글이면 다시 조회수를 올리지 않음
+  useEffect(() => {
+    if (!post?.slug) return;
+    const key = `blog_viewed_${post.slug}`;
+    if (localStorage.getItem(key) === "1") return;
+    localStorage.setItem(key, "1");
+    viewMutation.mutate({ slug: post.slug });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [post?.slug]);
 
   const likeMutation = trpc.blog.like.useMutation({
     onSuccess: () => { setLiked(true); toast.success("좋아요!"); },
@@ -187,7 +206,7 @@ export default function BlogDetailPage() {
                 className="font-mono text-[0.72rem] flex items-center gap-1 transition-colors duration-350"
                 style={{ color: textFaint }}
               >
-                <Eye size={11} /> {post.viewCount ?? 0}
+                <Eye size={11} /> {viewCount ?? post.viewCount ?? 0}
               </span>
             </div>
 
