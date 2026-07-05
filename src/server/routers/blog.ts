@@ -75,13 +75,20 @@ export const blogRouter = router({
     .query(async ({ input }) => {
       const post = await cachedGetPostBySlug(input.slug);
       if (!post) return null;
-      await incrementBlogPostViews(input.slug);
       const interaction = await getBlogInteraction(input.slug);
       return {
         ...post,
-        viewCount: (interaction?.viewCount ?? 0) + 1,
+        viewCount: interaction?.viewCount ?? 0,
         likes: interaction?.likes ?? 0,
       };
+    }),
+
+  incrementView: publicProcedure
+    .input(z.object({ slug: z.string() }))
+    .mutation(async ({ input }) => {
+      await incrementBlogPostViews(input.slug);
+      const interaction = await getBlogInteraction(input.slug);
+      return { viewCount: interaction?.viewCount ?? 1 };
     }),
 
   search: publicProcedure
