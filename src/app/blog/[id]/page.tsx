@@ -102,15 +102,37 @@ export default function BlogDetailPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [post?.slug]);
 
+  // 이 브라우저에서 이미 좋아요 누른 글인지 localStorage로 확인
+  useEffect(() => {
+    if (!slug) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- localStorage는 리액트 외부 저장소라 렌더 중 동기 로직으로 옮길 수 없음
+    setLiked(localStorage.getItem(`blog_liked_${slug}`) === "1");
+  }, [slug]);
+
+  const [likeCount, setLikeCount] = useState<number | null>(null);
+
   const likeMutation = trpc.blog.like.useMutation({
-    onSuccess: () => { setLiked(true); toast.success("좋아요!"); },
+    onSuccess: data => {
+      localStorage.setItem(`blog_liked_${slug}`, "1");
+      setLiked(true);
+      setLikeCount(data.likes);
+      toast.success("좋아요!");
+      utils.blog.list.invalidate();
+    },
   });
   const unlikeMutation = trpc.blog.unlike.useMutation({
-    onSuccess: () => { setLiked(false); },
+    onSuccess: data => {
+      localStorage.removeItem(`blog_liked_${slug}`);
+      setLiked(false);
+      setLikeCount(data.likes);
+      utils.blog.list.invalidate();
+    },
   });
 
+  const likeMutationPending = likeMutation.isPending || unlikeMutation.isPending;
+
   const handleLike = () => {
-    if (!post) return;
+    if (!post || likeMutationPending) return;
     if (liked) unlikeMutation.mutate({ slug: post.slug });
     else likeMutation.mutate({ slug: post.slug });
   };
@@ -281,16 +303,18 @@ export default function BlogDetailPage() {
           >
             <button
               onClick={handleLike}
+              disabled={likeMutationPending}
               className="flex items-center gap-2 font-sans text-[0.85rem] px-4 py-[0.45rem] rounded-md transition-all duration-200"
               style={{
                 background: liked ? "rgba(255,140,66,0.12)" : "transparent",
                 border: `1px solid ${liked ? "rgba(255,140,66,0.4)" : border}`,
                 color: liked ? "#FF8C42" : textMuted,
-                cursor: liked ? "default" : "pointer",
+                cursor: likeMutationPending ? "wait" : "pointer",
+                opacity: likeMutationPending ? 0.6 : 1,
               }}
             >
               <Heart size={15} fill={liked ? "#FF8C42" : "none"} />
-              {(post.likes ?? 0) + (liked ? 1 : 0)}
+              {likeCount ?? post.likes ?? 0}
             </button>
             <button
               onClick={handleShare}
