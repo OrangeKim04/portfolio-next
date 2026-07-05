@@ -9,6 +9,7 @@ import MDEditor from "@uiw/react-md-editor";
 import { useThemeColors } from "@/contexts/ThemeContext";
 import TerminalLoader from "@/components/TerminalLoader";
 import categoryColors from "@/lib/categoryColors";
+import GiscusComments from "@/components/GiscusComments";
 
 const toHeadingId = (text: string) =>
   text.toLowerCase().replace(/[^a-z0-9가-힣\s]/g, "").replace(/\s+/g, "-").trim();
@@ -289,6 +290,7 @@ export default function BlogDetailPage() {
               공유
             </button>
           </div>
+          <GiscusComments />
           <div ref={bottomRef} className="h-px" />
         </article>
 
