@@ -1,296 +1,138 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import { Menu, X, Terminal, Sun, Moon } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useTheme, useThemeColors } from "@/contexts/ThemeContext";
 import { usePageLoading } from "@/contexts/LoadingContext";
 import TangerineRain from "@/components/TangerineRain";
 
 const navItems = [
-  { label: "Home", href: "#hero" },
-  // { label: "About", href: "#about" },
-  // { label: "Skills", href: "#skills" },
-  // { label: "Projects", href: "#projects" },
-  { label: "Blog", href: "#blog" },
+  { label: "Home", href: "/#hero", section: "hero" },
+  { label: "Projects", href: "/projects", section: "projects" },
+  { label: "Blog", href: "/#blog", section: "blog" },
 ];
 
-export default function Navbar() {
-  const pathname = usePathname();
-  const router = useRouter();
-  const isHomePage = pathname === "/";
+function ThemeToggle() {
   const { toggleTheme } = useTheme();
-  const { isDark, text, textMuted, navBg, border } = useThemeColors();
-  const { isPageLoading } = usePageLoading();
+  const { isDark } = useThemeColors();
+  return (
+    <button onClick={toggleTheme} aria-label="테마 전환"
+      className="relative flex items-center justify-between shrink-0 cursor-pointer px-1.5 rounded-full w-13 h-7"
+      style={{ background: isDark ? "rgba(255,209,102,0.12)" : "rgba(160,100,0,0.08)", border: "1px solid rgba(200,150,40,.4)" }}>
+      <Moon size={11} color="#BA923F" /><Sun size={11} color="#BA923F" />
+      <span className="absolute top-0.5 w-5.5 h-5.5 rounded-full flex items-center justify-center pointer-events-none transition-[left] duration-300"
+        style={{ left: isDark ? "3px" : "calc(100% - 25px)", background: "#FFD166", boxShadow: "0 2px 8px rgba(255,209,102,.4)" }}>
+        {isDark ? <Moon size={11} color="#0A0F1E" /> : <Sun size={11} color="#0A0F1E" />}
+      </span>
+    </button>
+  );
+}
 
+function Navigation({ pathname }: { pathname: string }) {
+  const isHomePage = pathname === "/";
+  const colors = useThemeColors();
+  const { isPageLoading } = usePageLoading();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
-  const [isMobile, setIsMobile] = useState(false);
   const [tangerineActive, setTangerineActive] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+  const menuButton = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
-
-      const sections = ["hero", "about", "skills", "projects", "blog"];
-
-      if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 80) {
-        setActiveSection(sections[sections.length - 1]);
-        return;
-      }
-
-      for (const id of [...sections].reverse()) {
-        const el = document.getElementById(id);
-        if (el && window.scrollY >= el.offsetTop - 120) {
-          setActiveSection(id);
-          break;
-        }
-      }
+      if (!isHomePage) return;
+      const blog = document.getElementById("blog");
+      const atBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 80;
+      setActiveSection(blog && (window.scrollY >= blog.offsetTop - 140 || atBottom) ? "blog" : "hero");
     };
+    const frame = requestAnimationFrame(handleScroll);
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    return () => { cancelAnimationFrame(frame); window.removeEventListener("scroll", handleScroll); };
+  }, [isHomePage]);
 
   useEffect(() => {
-    document.body.style.overflow = mobileOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    if (!mobileOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") { setMobileOpen(false); menuButton.current?.focus(); }
+    };
+    const onResize = () => { if (window.innerWidth >= 768) setMobileOpen(false); };
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("resize", onResize);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("resize", onResize);
+    };
   }, [mobileOpen]);
 
-  const scrollTo = (href: string) => {
-    setMobileOpen(false);
-    const id = href.replace("#", "");
-    const el = document.getElementById(id);
-    if (el) setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 10);
-  };
-
+  const isActive = (section: string) => isHomePage ? activeSection === section
+    : section === "projects" ? pathname === "/projects" || pathname.startsWith("/project/")
+    : section === "blog" && (pathname === "/blogs" || pathname.startsWith("/blog/"));
   const showThemeToggle = (!isHomePage || activeSection === "blog") && !isPageLoading;
+  const solid = !isHomePage || scrolled || mobileOpen;
 
   return (
     <>
-      <nav
-        className="fixed top-0 left-0 right-0 z-100 px-8 h-16 flex items-center justify-between transition-[background,backdrop-filter,border-color] duration-300"
-        style={{
-          background: scrolled || mobileOpen ? navBg : "transparent",
-          backdropFilter: scrolled || mobileOpen ? "blur(16px)" : "none",
-          borderBottom: scrolled || mobileOpen ? `1px solid ${border}` : "1px solid transparent",
-        }}
-      >
-        {/* Logo */}
-        <a
-          href="/"
-          onClick={e => {
-            e.preventDefault();
-            if (isHomePage) scrollTo("#hero");
-            else router.push("/");
-          }}
-          className="flex items-center gap-2 no-underline"
-        >
-          <span
-            onClick={e => { e.preventDefault(); e.stopPropagation(); setTangerineActive(true); }}
-            className="cursor-pointer select-none"
-            title="🍊"
-          >
-            <Terminal size={18} color="#FF8C42" />
-          </span>
-          <span className="font-mono text-[0.9rem] font-bold tracking-wider text-tangerine">
-            dev.portfolio
-          </span>
-          <span className="font-mono text-[0.9rem] opacity-50" style={{ color: text }}>
-            ~$
-          </span>
-        </a>
-
-        <TangerineRain active={tangerineActive} onDone={() => setTangerineActive(false)} />
-
-        {/* Desktop Nav + Theme Toggle */}
-        {!isMobile && isHomePage && (
-          <ul className="flex items-center gap-8 list-none m-0 p-0">
-            {showThemeToggle && (
-              <li>
-                <button
-                  onClick={toggleTheme}
-                  aria-label="테마 전환"
-                  className="relative flex items-center justify-between shrink-0 cursor-pointer px-1.5 rounded-full transition-[background,border-color] duration-300"
-                  style={{
-                    width: "60px",
-                    height: "30px",
-                    background: isDark ? "rgba(255,209,102,0.12)" : "rgba(160,100,0,0.08)",
-                    border: `1px solid ${isDark ? "rgba(255,209,102,0.4)" : "rgba(160,100,0,0.45)"}`,
-                  }}
-                >
-                  <Moon size={12} color={isDark ? "rgba(255,209,102,0.4)" : "rgba(160,100,0,0.4)"} />
-                  <Sun  size={12} color={isDark ? "rgba(255,209,102,0.4)" : "rgba(160,100,0,0.4)"} />
-                  <span
-                    className="absolute top-0.75 w-6 h-6 rounded-full flex items-center justify-center pointer-events-none transition-[left] duration-300"
-                    style={{
-                      left: isDark ? "3px" : "calc(100% - 27px)",
-                      background: "#FFD166",
-                      boxShadow: "0 2px 8px rgba(255,209,102,0.6)",
-                      transitionTimingFunction: "cubic-bezier(0.34,1.56,0.64,1)",
-                    }}
-                  >
-                    {isDark ? <Moon size={11} color="white" /> : <Sun size={11} color="white" />}
-                  </span>
-                </button>
-              </li>
-            )}
-            {navItems.map(item => (
-              <li key={item.href}>
-                <button
-                  onClick={() => scrollTo(item.href)}
-                  className="relative bg-none border-none font-sans text-sm font-medium cursor-pointer transition-colors duration-200 py-1 px-0"
-                  style={{ color: activeSection === item.href.replace("#", "") ? "#FF8C42" : textMuted }}
-                >
-                  {item.label}
-                  {activeSection === item.href.replace("#", "") && (
-                    <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-tangerine rounded-sm" />
-                  )}
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-
-        {/* Desktop Theme Toggle (비홈 페이지) */}
-        {!isMobile && !isHomePage && !isPageLoading && (
-          <button
-            onClick={toggleTheme}
-            aria-label="테마 전환"
-            className="relative flex items-center justify-between shrink-0 cursor-pointer px-1.5 rounded-full transition-[background,border-color] duration-300"
-            style={{
-              width: "60px",
-              height: "30px",
-              background: isDark ? "rgba(255,209,102,0.12)" : "rgba(160,100,0,0.08)",
-              border: `1px solid ${isDark ? "rgba(255,209,102,0.4)" : "rgba(160,100,0,0.45)"}`,
-            }}
-          >
-            <Moon size={12} color={isDark ? "rgba(255,209,102,0.4)" : "rgba(160,100,0,0.4)"} />
-            <Sun  size={12} color={isDark ? "rgba(255,209,102,0.4)" : "rgba(160,100,0,0.4)"} />
-            <span
-              className="absolute top-0.75 w-6 h-6 rounded-full flex items-center justify-center pointer-events-none transition-[left] duration-300"
-              style={{
-                left: isDark ? "3px" : "calc(100% - 27px)",
-                background: "#FFD166",
-                boxShadow: "0 2px 8px rgba(255,209,102,0.6)",
-                transitionTimingFunction: "cubic-bezier(0.34,1.56,0.64,1)",
-              }}
-            >
-              {isDark ? <Moon size={11} color="white" /> : <Sun size={11} color="white" />}
-            </span>
+      <nav aria-label="메인 내비게이션"
+        className="fixed top-0 left-0 right-0 z-100 px-5 md:px-8 h-16 flex items-center justify-between transition-[background,backdrop-filter,border-color] duration-300"
+        style={{ background: solid ? colors.navBg : "transparent", backdropFilter: solid ? "blur(16px)" : "none", borderBottom: solid ? `1px solid ${colors.border}` : "1px solid transparent" }}>
+        <div className="flex items-center gap-2">
+          <button type="button" onClick={() => setTangerineActive(true)} aria-label="귤 애니메이션"
+            className="cursor-pointer border-0 bg-transparent p-1"><Terminal size={18} color="#FF8C42" /></button>
+          <Link href="/#hero" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 no-underline">
+            <span className="font-mono text-[0.9rem] font-bold tracking-wider text-tangerine">dev.portfolio</span>
+            <span className="font-mono text-[0.9rem] opacity-50" style={{ color: colors.text }}>~$</span>
+          </Link>
+        </div>
+        <div className="hidden md:flex items-center gap-8">
+          {navItems.map(item => (
+            <Link key={item.section} href={item.href} aria-current={isActive(item.section) ? (isHomePage ? "location" : "page") : undefined}
+              className="relative text-sm font-medium py-1 no-underline transition-colors duration-200"
+              style={{ color: isActive(item.section) ? "#FF8C42" : colors.textMuted }}>
+              {item.label}
+              {isActive(item.section) && <span className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-tangerine rounded-sm" />}
+            </Link>
+          ))}
+          {showThemeToggle && <ThemeToggle />}
+        </div>
+        <div className="flex md:hidden items-center gap-3">
+          {showThemeToggle && <ThemeToggle />}
+          <button ref={menuButton} type="button" onClick={() => setMobileOpen(open => !open)}
+            aria-label={mobileOpen ? "메뉴 닫기" : "메뉴 열기"} aria-expanded={mobileOpen} aria-controls="mobile-navigation"
+            className="flex items-center justify-center cursor-pointer rounded p-1.5 bg-transparent"
+            style={{ border: "1px solid rgba(255,140,66,.25)", color: colors.text }}>
+            {mobileOpen ? <X size={22} color="#FF8C42" /> : <Menu size={22} />}
           </button>
-        )}
-
-        {/* Mobile right side */}
-        {isMobile && (
-          <div className="flex items-center gap-2">
-            {showThemeToggle && (
-              <button
-                onClick={toggleTheme}
-                aria-label="테마 전환"
-                className="relative flex items-center justify-between shrink-0 cursor-pointer px-1.5 rounded-full transition-[background,border-color] duration-300"
-                style={{
-                  width: "52px",
-                  height: "26px",
-                  background: isDark ? "rgba(255,209,102,0.12)" : "rgba(160,100,0,0.08)",
-                  border: `1px solid ${isDark ? "rgba(255,209,102,0.4)" : "rgba(160,100,0,0.45)"}`,
-                }}
-              >
-                <Moon size={10} color={isDark ? "rgba(255,209,102,0.4)" : "rgba(160,100,0,0.4)"} />
-                <Sun  size={10} color={isDark ? "rgba(255,209,102,0.4)" : "rgba(160,100,0,0.4)"} />
-                <span
-                  className="absolute top-0.75 w-5 h-5 rounded-full flex items-center justify-center pointer-events-none transition-[left] duration-300"
-                  style={{
-                    left: isDark ? "3px" : "calc(100% - 23px)",
-                    background: "#FFD166",
-                    boxShadow: "0 2px 8px rgba(255,209,102,0.6)",
-                    transitionTimingFunction: "cubic-bezier(0.34,1.56,0.64,1)",
-                  }}
-                >
-                  {isDark ? <Moon size={9} color="white" /> : <Sun size={9} color="white" />}
-                </span>
-              </button>
-            )}
-            {isHomePage && (
-              <button
-                onClick={() => setMobileOpen(prev => !prev)}
-                className="flex items-center justify-center cursor-pointer rounded p-[0.4rem] transition-[border-color,background] duration-200"
-                style={{
-                  background: "none",
-                  border: "1px solid rgba(255,140,66,0.25)",
-                  color: "#E2E8F0",
-                }}
-                aria-label={mobileOpen ? "메뉴 닫기" : "메뉴 열기"}
-              >
-                {mobileOpen ? <X size={22} color="#FF8C42" /> : <Menu size={22} />}
-              </button>
-            )}
-          </div>
-        )}
+        </div>
       </nav>
-
-      {/* Mobile Menu Overlay */}
-      {isMobile && isHomePage && (
+      <TangerineRain active={tangerineActive} onDone={() => setTangerineActive(false)} />
+      {mobileOpen && (
         <>
-          <div
-            onClick={() => setMobileOpen(false)}
-            className="fixed inset-0 z-98 transition-opacity duration-250"
-            style={{
-              background: "rgba(0,0,0,0.5)",
-              opacity: mobileOpen ? 1 : 0,
-              pointerEvents: mobileOpen ? "auto" : "none",
-            }}
-          />
-          <div
-            className="fixed top-16 left-0 right-0 z-99 px-6 pt-5 pb-7 transition-[transform,opacity] duration-250"
-            style={{
-              background: "rgba(10, 15, 30, 0.98)",
-              backdropFilter: "blur(20px)",
-              borderBottom: "1px solid rgba(255, 140, 66, 0.15)",
-              transform: mobileOpen ? "translateY(0)" : "translateY(-8px)",
-              opacity: mobileOpen ? 1 : 0,
-              pointerEvents: mobileOpen ? "auto" : "none",
-            }}
-          >
-            <ul className="list-none m-0 p-0 flex flex-col gap-1">
-              {navItems.map((item, i) => {
-                const isActive = activeSection === item.href.replace("#", "");
-                return (
-                  <li key={item.href}>
-                    <button
-                      onClick={() => scrollTo(item.href)}
-                      className="w-full text-left flex items-center gap-3 px-4 py-3 rounded-md border-none cursor-pointer transition-[background,color] duration-150 font-sans text-base"
-                      style={{
-                        background: isActive ? "rgba(255,140,66,0.08)" : "none",
-                        fontWeight: isActive ? 600 : 400,
-                        color: isActive ? "#FF8C42" : "rgba(226,232,240,0.8)",
-                      }}
-                    >
-                      <span
-                        className="font-mono text-[0.65rem] min-w-6"
-                        style={{ color: isActive ? "#FF8C42" : "rgba(255,140,66,0.35)" }}
-                      >
-                        0{i + 1}
-                      </span>
-                      {item.label}
-                      {isActive && (
-                        <span className="ml-auto w-1.5 h-1.5 rounded-full shrink-0 bg-tangerine" />
-                      )}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+          <div className="fixed inset-0 z-98 bg-black/50 md:hidden" onClick={() => setMobileOpen(false)} aria-hidden="true" />
+          <nav id="mobile-navigation" aria-label="모바일 내비게이션"
+            className="fixed top-16 left-0 right-0 z-99 px-6 py-5 md:hidden"
+            style={{ background: colors.navBg, borderBottom: "1px solid rgba(255,140,66,.2)" }}>
+            {navItems.map((item, index) => (
+              <Link key={item.section} href={item.href} onClick={() => { setMobileOpen(false); menuButton.current?.focus(); }}
+                aria-current={isActive(item.section) ? (isHomePage ? "location" : "page") : undefined}
+                className="flex items-center gap-3 px-4 py-3 rounded-md no-underline text-base"
+                style={{ color: isActive(item.section) ? "#FF8C42" : colors.text, background: isActive(item.section) ? "rgba(255,140,66,.08)" : "transparent" }}>
+                <span className="font-mono text-xs text-tangerine opacity-60">0{index + 1}</span>{item.label}
+              </Link>
+            ))}
+          </nav>
         </>
       )}
     </>
   );
+}
+
+export default function Navbar() {
+  const pathname = usePathname();
+  return <Navigation key={pathname} pathname={pathname} />;
 }
