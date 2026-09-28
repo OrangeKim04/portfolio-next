@@ -32,8 +32,12 @@ jobs:
       - name: Deploy to Vercel (Preview)
         id: deploy
         run: |
-          OUTPUT=$(npx vercel --token=${{ secrets.VERCEL_TOKEN }} --yes 2>&1)
-          echo "$OUTPUT"
+          if OUTPUT=$(npx vercel --token=${{ secrets.VERCEL_TOKEN }} --yes 2>&1); then
+            echo "$OUTPUT"
+          else
+            echo "$OUTPUT"
+            exit 1
+          fi
           URL=$(echo "$OUTPUT" | grep -o 'https://[^ ]*vercel\.app' | head -1 | tr -d '\r\n')
           echo "preview_url=${URL}" >> "$GITHUB_OUTPUT"
         env:
