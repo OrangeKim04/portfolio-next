@@ -33,3 +33,7 @@ Revert the entire release together so content, assets and route code stay compat
 - Scoped ESLint passed. Full repo lint: 43 errors in unchanged files.
 - Local HTTP: catalog + six detail routes 200; unknown project 404.
 - Browser: desktop/mobile, dark/light, images, filters, menu close, Escape focus return.
+
+## Deployment compatibility
+- Scope .vercelignore to /data/ (root local database); src/data must be uploaded.
+- Preview workflow prints the Vercel error output before exiting on failures.
