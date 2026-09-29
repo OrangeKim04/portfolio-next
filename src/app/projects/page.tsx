@@ -3,7 +3,7 @@ import ProjectsCatalog from "@/components/projects/ProjectsCatalog";
 
 export const metadata: Metadata = {
   title: "Projects | dev.gyuri",
-  description: "PlanUp, 기업용 PMS, 놀이터백과, Okii, 서행, ZeroPick — 직접 고민하고 구현한 프로젝트를 소개합니다.",
+  description: "LLM Agent, PlanUp, 기업용 PMS, 리틀펫부터 개인 학습까지. 프로젝트별 역할, 팀 구성, 기술 스택과 문제 해결 경험을 소개합니다.",
 };
 
 export default function ProjectsPage() {

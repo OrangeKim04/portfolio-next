@@ -58,8 +58,8 @@ export default function HeroSection() {
     return () => clearInterval(interval);
   }, []);
 
-  const scrollToAbout = () => {
-    document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
+  const scrollToProjects = () => {
+    document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -250,7 +250,7 @@ export default function HeroSection() {
       </div>
 
       <button
-        onClick={scrollToAbout}
+        onClick={scrollToProjects}
         style={{
           position: "absolute",
           bottom: "2.5rem",

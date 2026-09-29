@@ -1,22 +1,25 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { projects } from "@/data/projects";
+import ProjectCard from "@/components/projects/ProjectCard";
+import styles from "@/components/projects/projects.module.css";
 
-// Uses the same source as /projects so re-enabling this section cannot expose demo data.
 export default function ProjectsSection() {
   return (
-    <section id="projects" className="container max-w-300 py-24">
-      <span className="section-label">{"// selected_work"}</span>
-      <h2 className="text-3xl font-bold mt-3 mb-8">프로젝트</h2>
-      <div className="grid gap-5 md:grid-cols-3">
-        {projects.filter(project => project.featured).map(project => (
-          <Link key={project.id} href={`/project/${project.id}`} className="border border-tangerine/25 rounded-xl p-6 no-underline text-inherit">
-            <h3 className="text-xl font-semibold">{project.title}</h3>
-            <p className="text-sm mt-3 leading-7 opacity-70">{project.subtitle}</p>
-          </Link>
-        ))}
+    <section id="projects" aria-labelledby="projects-heading" className={`${styles.shell} ${styles.preview}`}>
+      <div className={styles.container}>
+        <header className={styles.previewHeader}>
+          <div>
+            <span className="section-label">{"// 03. projects"}</span>
+            <h2 id="projects-heading">최근 프로젝트</h2>
+            <p>직접 만들고 해결한 경험들, 최근 시작한 프로젝트부터.</p>
+          </div>
+          <Link href="/projects" className={styles.viewAll}>프로젝트 전체 보기 <span>{projects.length}</span><ArrowRight size={15} /></Link>
+        </header>
+        <div className={styles.grid}>
+          {projects.slice(0, 3).map(project => <ProjectCard key={project.id} project={project} />)}
+        </div>
       </div>
-      <Link href="/projects" className="inline-flex items-center gap-2 text-tangerine mt-8">전체 프로젝트 <ArrowRight size={16} /></Link>
     </section>
   );
 }
