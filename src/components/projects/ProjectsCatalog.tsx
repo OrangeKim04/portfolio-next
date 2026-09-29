@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, ArrowLeft, Code2 } from "lucide-react";
 import { projects, categoryLabels, type ProjectCategory } from "@/data/projects";
-import ProjectVisual from "./ProjectVisual";
+import ProjectCard from "./ProjectCard";
 import styles from "./projects.module.css";
 
 export default function ProjectsCatalog() {
@@ -21,8 +21,8 @@ export default function ProjectsCatalog() {
           <div className={styles.headingRow}>
             <h1>만들고, 연결하고,<br /><span>해결한 것들.</span></h1>
             <div className={styles.intro}>
-              <p>아이디어를 서비스로 옮기며 쌓은 경험들.<br />직접 고민하고 구현한 여섯 개의 프로젝트를 소개합니다.</p>
-              <span className={styles.total}><Code2 size={15} /> 06 PROJECTS · 2024 — 2025</span>
+              <p>아이디어를 서비스로 옮기며 쌓은 경험들.<br />서비스 개발부터 개인 학습까지, 직접 만든 프로젝트를 소개합니다.</p>
+              <span className={styles.total}><Code2 size={15} /> {String(projects.length).padStart(2, "0")} PROJECTS · {projects.at(-1)?.startDate.slice(0, 4)} — {projects[0].startDate.slice(0, 4)}</span>
             </div>
           </div>
         </header>
@@ -36,28 +36,11 @@ export default function ProjectsCatalog() {
               </button>
             ))}
           </div>
-          <span className={styles.resultCount} role="status">{visible.length}개의 프로젝트</span>
+          <span className={styles.resultCount} role="status">{visible.length}개의 프로젝트 · 시작일 최신순</span>
         </div>
         <div className={styles.grid}>
-          {visible.map(project => (
-            <article key={project.id} className={styles.card}>
-              <Link href={`/project/${project.id}`} className={styles.cardLink}>
-                <ProjectVisual project={project} />
-                <div className={styles.cardBody}>
-                  <div className={styles.meta}>
-                    <span>{categoryLabels[project.category]}</span>
-                    {project.featured && <span className={styles.featured}>SELECTED</span>}
-                    <span className={styles.year}>{project.period.slice(0, 4)}</span>
-                  </div>
-                  <h2>{project.title}<ArrowRight size={19} /></h2>
-                  <p className={styles.subtitle}>{project.subtitle}</p>
-                  <p className={styles.role}>{project.role}</p>
-                  <div className={styles.tags}>{project.tags.map(tag => <span key={tag}>{tag}</span>)}</div>
-                  <div className={styles.cardFooter}><span>{project.highlight}</span><span aria-hidden="true">↗</span></div>
-                </div>
-              </Link>
-            </article>
-          ))}
+          <h2 className="sr-only">프로젝트 목록</h2>
+          {visible.map(project => <ProjectCard key={project.id} project={project} />)}
         </div>
         <footer className={styles.footer}><span>작은 시도들이 모여, 다음 프로젝트로.</span><Link href="/blogs">개발 기록 보기 <ArrowRight size={14} /></Link></footer>
       </div>

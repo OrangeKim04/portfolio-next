@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Database, MapPinned, ArrowUpRight } from "lucide-react";
+import { Database, MapPinned, Code2, ArrowUpRight } from "lucide-react";
 import type { Project } from "@/data/projects";
 import styles from "./projects.module.css";
 
@@ -13,9 +13,9 @@ export default function ProjectVisual({ project }: { project: Project }) {
           className={project.id === "planup" ? styles.bannerImage : styles.logoImage} />
       ) : (
         <div className={styles.wordmark}>
-          {project.id === "pms" ? <Database size={34} strokeWidth={1.3} /> : <MapPinned size={34} strokeWidth={1.3} />}
-          <span>{project.id === "pms" ? "PMS" : "서행"}</span>
-          <small>{project.id === "pms" ? "PROJECT × PEOPLE" : "SLOW JOURNEY, SEOUL"}</small>
+          {project.id === "pms" ? <Database size={34} strokeWidth={1.3} /> : project.id === "seohaeng" ? <MapPinned size={34} strokeWidth={1.3} /> : <Code2 size={34} strokeWidth={1.3} />}
+          <span>{project.wordmark ?? (project.id === "pms" ? "PMS" : project.title)}</span>
+          <small>{project.visualLabel ?? (project.id === "pms" ? "PROJECT × PEOPLE" : "SLOW JOURNEY")}</small>
         </div>
       )}
       <span className={styles.visualCorner} aria-hidden="true"><ArrowUpRight size={17} /></span>

@@ -45,8 +45,10 @@ function Navigation({ pathname }: { pathname: string }) {
       setScrolled(window.scrollY > 50);
       if (!isHomePage) return;
       const blog = document.getElementById("blog");
+      const projects = document.getElementById("projects");
       const atBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 80;
-      setActiveSection(blog && (window.scrollY >= blog.offsetTop - 140 || atBottom) ? "blog" : "hero");
+      setActiveSection(blog && (window.scrollY >= blog.offsetTop - 140 || atBottom) ? "blog"
+        : projects && window.scrollY >= projects.offsetTop - 140 ? "projects" : "hero");
     };
     const frame = requestAnimationFrame(handleScroll);
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -73,7 +75,7 @@ function Navigation({ pathname }: { pathname: string }) {
   const isActive = (section: string) => isHomePage ? activeSection === section
     : section === "projects" ? pathname === "/projects" || pathname.startsWith("/project/")
     : section === "blog" && (pathname === "/blogs" || pathname.startsWith("/blog/"));
-  const showThemeToggle = (!isHomePage || activeSection === "blog") && !isPageLoading;
+  const showThemeToggle = (!isHomePage || activeSection !== "hero") && !isPageLoading;
   const solid = !isHomePage || scrolled || mobileOpen;
 
   return (

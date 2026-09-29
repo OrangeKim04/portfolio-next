@@ -7,6 +7,8 @@ Downloaded 2026-09-28. Application screenshots are not fabricated.
 - playground.png: https://github.com/OrangeKim04/PLAYGROUND/blob/master/assets/playground.png
 - okii.svg: https://github.com/IT-s-Time-6Team/FE/blob/develop/src/assets/Main/main_icon_group.svg
 - zeropick.svg: https://github.com/capstoneMJU/frontend/blob/main/ZeroPick/public/Logo.svg
+- littlepet.svg (2026-09-29): https://github.com/Little-pet/UMC_LittlePet_Front/blob/main/LittlePet_Front/src/assets/logo_blue.svg
 
 PMS and SeoHaeng use typography and interface icons, not claimed product screenshots.
+The portfolio, financial agent and learning projects also use typographic covers.
 Expo default icons found in the app repositories are intentionally excluded.
