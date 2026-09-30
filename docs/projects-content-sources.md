@@ -21,8 +21,8 @@ Only project-related content from user-supplied documents is included. Private a
 - All views use startDate descending; source date precision is preserved in displayed periods. A YYYY-MM-01 sorting key does not claim the first day when only a month is known.
 - Okii end month follows the explicitly named project entry in the Lotte application (July); the Hynix experience entry includes August. No precise end day is invented.
 - Portfolio began March 2026 according to the supplied application; June Git repository creation is not used as project start. Current maintenance is ongoing.
-- Financial Agent institution, team and repository are not present in provided sources; requested from the user. Unknown fields are identified and no guessed GitHub link is published.
-- SeoHaeng Notion says Seoul, whereas its repository README says book-based Gangwon travel. Requested clarification; neutral tourism wording until confirmed.
+- Financial Agent institution verified as MJU 2025-2 Open Source Software Practice from the public organization profile. The Agent repository is private; link the public team organization. Team composition was requested, not inferred from contributors. Unknown facts are omitted from the public page.
+- User confirmed Gangwon bookstore travel on 2026-09-30. Backend README and frontend develop branch confirm the four named features. The older Notion Seoul description is superseded.
 - PMS's reported 0.000s is display-precision-limited, not proof of zero latency or an exact 500x ratio.
 - Agent timings are attributed to the supplied application and only describe simple retrieval requests.
 - ZeroPick and SeoHaeng use documented collaboration/design constraints as problem-solving cases; no invented technical incident is added.
@@ -44,3 +44,15 @@ To undo this follow-up release, revert its merge commit with `git revert -m 1 <m
 - Verified unique slugs, descending start dates, required content and local asset existence.
 - Browser checks: home latest-three preview, all-projects navigation, AI filter, current-section indicator, mobile/light detail readability and loaded LittlePet asset without horizontal overflow.
 - Hero change only retargets the existing scroll handler from disabled About to Projects; pre-existing lint findings in Hero and other unrelated code remain outside this change.
+
+## Repository detail review · 2026-09-30
+
+- SeoHaeng: `SeoHaeng/SeoHaeng_BE` develop README and `SeoHaeng_FE` develop `app/(tabs)/milestone.tsx`, `preference.tsx`, `app/maru/bookSearch.tsx`, routes and API definitions. Four features: 이정표, 공간책갈피, 북챌린지, 취향길목. Kakao map, TourAPI and Naver book search are distinguished; external tourism/book calls are mediated by backend APIs. Link frontend develop (main contains the starter).
+- Playground: README lists ten data sources; `pages/main.js`, `InfoBox.js`, `weather.js`, `datas/` confirm Mapo JSON facility/safety data joined by pfctSn, weather at current coordinates, Seoul air quality. README-based nationwide coverage and all-ten-live-API claims are not made. Public code is sequential for weather/air calls; replaced previously repeated Promise.all performance narrative with directly evidenced data integration case. No credentials copied.
+- Financial Agent: public `MJU-OSS-2025/.github/profile/README.md` identifies course; implementation confirms Python/FastAPI, Gemini 2.5 Flash and available financial lookup tools. Only high-level project features are summarized; private code is not published.
+- ZeroPick: `capstoneMJU/.github/profile/README.md` confirms product features and role breakdown; frontend routes confirm saved OCR/recipe and product detail screens. The 90% accuracy mentioned as a goal is not treated as a result.
+- Okii: develop page/API tree confirms three modes, invite, voting and summary routes.
+- Existing primary documents and previous source checks support PlanUp, LittlePet, PMS, movie and Spring study. Major features describe the product; personal contributions remain a separate section.
+- Unconfirmed fields and absent troubleshooting entries are hidden instead of publishing editorial placeholders. All eleven entries have explicit feature descriptions.
+
+Baseline for this editorial release: `ef66fef6715ea7897dbccab08e22ebfebe078521` (PR #15).
