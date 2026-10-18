@@ -15,7 +15,7 @@ const notoSansKR = Noto_Sans_KR({ subsets: ["latin"], variable: "--font-noto-san
 
 export const metadata: Metadata = {
   title: "dev.gyuri",
-  description: "확장 가능한 백엔드 시스템과 RESTful API를 설계하는 개발자 포트폴리오",
+  description: "소프트웨어로 문제를 해결하고 더 나은 사용자 경험을 만드는 소프트웨어 엔지니어 포트폴리오",
 };
 
 export default function RootLayout({
