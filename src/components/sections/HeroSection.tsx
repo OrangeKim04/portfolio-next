@@ -45,8 +45,10 @@ export default function HeroSection() {
           setDisplayText(displayText.slice(0, -1));
         }, 40);
       } else {
-        setIsDeleting(false);
-        setTextIndex(prev => (prev + 1) % TYPING_TEXTS.length);
+        timeout = setTimeout(() => {
+          setIsDeleting(false);
+          setTextIndex(prev => (prev + 1) % TYPING_TEXTS.length);
+        }, 40);
       }
     }
 
@@ -132,7 +134,7 @@ export default function HeroSection() {
               letterSpacing: "0.1em",
             }}
           >
-            // 안녕하세요, 저는
+            {"// 안녕하세요, 저는"}
           </span>
         </div>
 
