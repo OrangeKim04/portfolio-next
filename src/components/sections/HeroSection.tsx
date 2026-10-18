@@ -15,8 +15,8 @@ import HeroBackground from "@/components/HeroBackground";
 import MagneticParticles from "@/components/MagneticParticles";
 
 const TYPING_TEXTS = [
-  "Backend Developer",
-  "API Architect",
+  "Software Engineer",
+  "Continuous Learner",
   "Problem Solver",
   "System Designer",
 ];
@@ -45,8 +45,10 @@ export default function HeroSection() {
           setDisplayText(displayText.slice(0, -1));
         }, 40);
       } else {
-        setIsDeleting(false);
-        setTextIndex(prev => (prev + 1) % TYPING_TEXTS.length);
+        timeout = setTimeout(() => {
+          setIsDeleting(false);
+          setTextIndex(prev => (prev + 1) % TYPING_TEXTS.length);
+        }, 40);
       }
     }
 
@@ -132,7 +134,7 @@ export default function HeroSection() {
               letterSpacing: "0.1em",
             }}
           >
-            // 안녕하세요, 저는
+            {"// 안녕하세요, 저는"}
           </span>
         </div>
 
@@ -189,9 +191,9 @@ export default function HeroSection() {
             animation: "fadeInUp 0.6s ease 0.4s both",
           }}
         >
-          확장 가능한 백엔드 시스템과 RESTful API를 설계합니다.
+          소프트웨어로 문제를 해결하고 더 나은 사용자 경험을 만듭니다.
           <br />
-          Spring Boot, FastAPI, 그리고 클라우드 인프라로 문제를 해결합니다.
+          웹, 서버, 클라우드를 넘나들며 아이디어를 서비스로 구현합니다.
         </p>
 
         <div style={{ display: "flex", gap: "1.25rem", animation: "fadeInUp 0.6s ease 0.6s both" }}>
