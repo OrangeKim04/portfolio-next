@@ -9,23 +9,18 @@ import {
   decrementBlogPostLikes,
 } from "../db";
 import {
-  getPublishedPosts,
-  getTotalPublishedCount,
+  getPublishedPostPage,
   getPostBySlug,
   searchPosts,
   getCategories,
 } from "../notion";
 
-const cachedGetPublishedPosts = unstable_cache(
+// Cache the page and total together to avoid duplicate Notion queries and
+// independently refreshed list/count results. Keep the existing 60s policy.
+const cachedGetPublishedPostPage = unstable_cache(
   (limit: number, offset: number, category?: string) =>
-    getPublishedPosts(limit, offset, category),
-  ["notion-posts"],
-  { revalidate: 60, tags: ["posts"] }
-);
-
-const cachedGetTotalCount = unstable_cache(
-  (category?: string) => getTotalPublishedCount(category),
-  ["notion-posts-count"],
+    getPublishedPostPage(limit, offset, category),
+  ["notion-post-page-v2"],
   { revalidate: 60, tags: ["posts"] }
 );
 
@@ -50,10 +45,9 @@ export const blogRouter = router({
     }))
     .query(async ({ input }) => {
       const offset = (input.page - 1) * input.limit;
-      const [posts, total] = await Promise.all([
-        cachedGetPublishedPosts(input.limit, offset, input.category),
-        cachedGetTotalCount(input.category),
-      ]);
+      const { posts, total } = await cachedGetPublishedPostPage(
+        input.limit, offset, input.category
+      );
       const interactions = await getBlogInteractions(posts.map(p => p.slug));
       return {
         posts: posts.map(p => ({
