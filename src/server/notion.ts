@@ -168,28 +168,6 @@ function pageToPost(
   };
 }
 
-async function fetchExcerpt(pageId: string): Promise<string | null> {
-  const { notion } = clients();
-  try {
-    const res = await notion.blocks.children.list({
-      block_id: pageId,
-      page_size: 5,
-    });
-    for (const block of res.results as any[]) {
-      const richText: any[] =
-        block[block.type]?.rich_text ?? block[block.type]?.text ?? [];
-      const raw = richText
-        .map((t: any) => t.plain_text)
-        .join("")
-        .trim();
-      if (raw.length > 10) {
-        return raw.length > 120 ? raw.slice(0, 120) + "..." : raw;
-      }
-    }
-  } catch {}
-  return null;
-}
-
 // ── Public types ──────────────────────────────────────────
 
 export interface BlogPost {
@@ -235,70 +213,37 @@ export async function getCategories(): Promise<{ id: string; name: string }[]> {
   return Array.from(seen).map(name => ({ id: name, name }));
 }
 
-export async function getPublishedPosts(
+export async function getPublishedPostPage(
   limit: number = 10,
   offset: number = 0,
   category?: string
-): Promise<BlogPost[]> {
+): Promise<{ posts: BlogPost[]; total: number }> {
   const { notion } = clients();
   const [dbProps, dsId] = await Promise.all([getDbProps(), getDataSourceId()]);
   const filter = buildFilter(dbProps, category);
 
-  console.log(
-    `[Notion] getPublishedPosts 호출 | page=${Math.floor(offset / limit) + 1} limit=${limit} category=${category ?? "all"} filter=${JSON.stringify(filter)}`
-  );
+  // One traversal supplies both the page and its total. Follow cursors so
+  // posts after the first 100 results remain reachable.
+  const results: any[] = [];
+  let cursor: string | undefined;
+  do {
+    const res = await notion.dataSources.query({
+      data_source_id: dsId,
+      ...(filter ? { filter } : {}),
+      sorts: [{ timestamp: "created_time", direction: "descending" }],
+      page_size: 100,
+      ...(cursor ? { start_cursor: cursor } : {}),
+    });
+    results.push(...res.results);
+    cursor = res.has_more ? res.next_cursor ?? undefined : undefined;
+  } while (cursor);
 
-  const res = await notion.dataSources.query({
-    data_source_id: dsId,
-    ...(filter ? { filter } : {}),
-    sorts: [{ timestamp: "created_time", direction: "descending" }],
-    page_size: 100,
-  });
-
-  const pages = res.results.slice(offset, offset + limit) as any[];
+  const pages = results.slice(offset, offset + limit);
   const posts = pages.map(p => pageToPost(p));
 
-  // excerpt가 없는 글은 첫 블록에서 자동 생성
-  const needsExcerpt = posts
-    .map((p, i) => (!p.excerpt ? i : -1))
-    .filter(i => i >= 0);
-  if (needsExcerpt.length > 0) {
-    const excerpts = await Promise.all(
-      needsExcerpt.map(i => fetchExcerpt(pages[i].id))
-    );
-    needsExcerpt.forEach((postIdx, j) => {
-      posts[postIdx].excerpt = excerpts[j];
-    });
-  }
-
-  console.log(
-    `[Notion] 결과 | total=${res.results.length} returned=${posts.length}`
-  );
-  posts.forEach((p, i) =>
-    console.log(
-      `  [${i + 1}] "${p.title}" | category=${p.category} | excerpt=${p.excerpt ? p.excerpt.slice(0, 40) + "…" : "null"}`
-    )
-  );
-
-  return posts;
-}
-
-export async function getTotalPublishedCount(
-  category?: string
-): Promise<number> {
-  const { notion } = clients();
-  const [dbProps, dsId] = await Promise.all([getDbProps(), getDataSourceId()]);
-  const filter = buildFilter(dbProps, category);
-
-  const res = await notion.dataSources.query({
-    data_source_id: dsId,
-    ...(filter ? { filter } : {}),
-    page_size: 100,
-  });
-  console.log(
-    `[Notion] getTotalPublishedCount | category=${category ?? "all"} | total=${res.results.length}`
-  );
-  return res.results.length;
+  // List UIs do not display generated excerpts. Keep explicit Notion excerpt
+  // properties, but do not fetch each page's blocks for invisible content.
+  return { posts, total: results.length };
 }
 
 const UUID_RE =

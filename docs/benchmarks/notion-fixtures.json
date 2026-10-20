@@ -1,0 +1,41 @@
+{
+  "cases": [
+    {
+      "size": 0,
+      "beforeQueries": 2,
+      "afterQueries": 1,
+      "beforeTotal": 0,
+      "afterTotal": 0,
+      "beforeReturned": 0,
+      "afterReturned": 0
+    },
+    {
+      "size": 25,
+      "beforeQueries": 2,
+      "afterQueries": 1,
+      "beforeTotal": 25,
+      "afterTotal": 25,
+      "beforeReturned": 10,
+      "afterReturned": 10
+    },
+    {
+      "size": 100,
+      "beforeQueries": 2,
+      "afterQueries": 1,
+      "beforeTotal": 100,
+      "afterTotal": 100,
+      "beforeReturned": 10,
+      "afterReturned": 10
+    },
+    {
+      "size": 125,
+      "beforeQueries": 2,
+      "afterQueries": 2,
+      "beforeTotal": 100,
+      "afterTotal": 125,
+      "beforeReturned": 0,
+      "afterReturned": 10
+    }
+  ],
+  "missingExcerpt": "No block fetch; null retained"
+}
