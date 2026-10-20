@@ -4,7 +4,7 @@ const assert = require('node:assert/strict');
 const deployment = process.env.PREVIEW_URL;
 assert.ok(deployment && process.env.VERCEL_TOKEN, 'Deployment URL and Vercel token required');
 function read(path) {
-  return execFileSync('npx', ['--yes', 'vercel', '--token', process.env.VERCEL_TOKEN, 'curl', path,
+  return execFileSync('npx', ['--yes', 'vercel', 'curl', path,
     '--deployment', deployment,
     '--', '--silent', '--show-error', '--fail'], { encoding: 'utf8', maxBuffer: 5 * 1024 * 1024 });
 }
@@ -33,7 +33,8 @@ try {
   console.log(JSON.stringify({ smoke: 'passed', total: first.pagination.total,
     firstPage: first.posts.length, lastPage: last.posts.length, categoryChecked: !!category }));
 } catch (error) {
-  // Do not print child_process error objects: spawnargs contain the token.
+  // Keep child process diagnostics out of logs; authentication is inherited via env.
   console.error('Deployment smoke test failed:', error.name);
   process.exitCode = 1;
 }
+
