@@ -4,8 +4,8 @@ const assert = require('node:assert/strict');
 const deployment = process.env.PREVIEW_URL;
 assert.ok(deployment && process.env.VERCEL_TOKEN, 'Deployment URL and Vercel token required');
 function read(path) {
-  return execFileSync('npx', ['--yes', 'vercel', 'curl', path,
-    '--deployment', deployment, '--token', process.env.VERCEL_TOKEN,
+  return execFileSync('npx', ['--yes', 'vercel', '--token', process.env.VERCEL_TOKEN, 'curl', path,
+    '--deployment', deployment,
     '--', '--silent', '--show-error', '--fail'], { encoding: 'utf8', maxBuffer: 5 * 1024 * 1024 });
 }
 function list(input) {
