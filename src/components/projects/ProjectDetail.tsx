@@ -68,11 +68,15 @@ export default function ProjectDetail({ project }: { project: Project }) {
               </div>
             </section>}
             {project.lessons && <section className={styles.section}><h2><span>{project.troubleshooting.length ? "06" : "05"}</span> 배운 점</h2><p className={styles.description}>{project.lessons}</p></section>}
+            {project.sources && project.sources.length > 0 && <section className={styles.section} aria-label="구현 근거">
+              <h2>구현 근거</h2>
+              <ul className={styles.sourceList}>{project.sources.map(source => <li key={source.url}><a className={styles.reference} href={source.url} target="_blank" rel="noopener noreferrer">{source.label}<ArrowUpRight size={14} /><span className="sr-only"> (새 탭)</span></a></li>)}</ul>
+            </section>}
           </div>
           <aside className={styles.sidebar} aria-label="프로젝트 정보">
             <span className="section-label">PROJECT INFO</span>
             <dl>
-              <div><dt>기간</dt><dd>{project.period}</dd></div>
+              {project.period && <div><dt>기간</dt><dd>{project.period}</dd></div>}
               {project.activity && <div><dt>활동·기관</dt><dd>{project.activity}</dd></div>}
               <div><dt>담당 역할</dt><dd>{project.role}</dd></div>
               {project.team && <div><dt>팀 구성</dt><dd>{project.team}</dd></div>}

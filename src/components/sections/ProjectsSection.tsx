@@ -11,8 +11,8 @@ export default function ProjectsSection() {
         <header className={styles.previewHeader}>
           <div>
             <span className="section-label">{"// 03. projects"}</span>
-            <h2 id="projects-heading">최근 프로젝트</h2>
-            <p>직접 만들고 해결한 경험들, 최근 시작한 프로젝트부터.</p>
+            <h2 id="projects-heading">프로젝트</h2>
+            <p>서비스 개발과 학습 과정에서 직접 구현하고 해결한 경험들.</p>
           </div>
           <Link href="/projects" className={styles.viewAll}>프로젝트 전체 보기 <span>{projects.length}</span><ArrowRight size={15} /></Link>
         </header>

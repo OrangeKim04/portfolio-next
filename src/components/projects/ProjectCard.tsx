@@ -12,7 +12,7 @@ export default function ProjectCard({ project }: { project: Project }) {
         <div className={styles.cardBody}>
           <div className={styles.meta}>
             <span>{categoryLabels[project.category]}</span>
-            <time className={styles.year} dateTime={project.startDate}>{project.startDate.slice(0, 7).replace("-", ".")}</time>
+            {project.startDate && <time className={styles.year} dateTime={project.startDate}>{project.startDate.slice(0, 7).replace("-", ".")}</time>}
           </div>
           <h3>{project.title}<ArrowRight size={19} /></h3>
           <p className={styles.subtitle}>{project.subtitle}</p>
