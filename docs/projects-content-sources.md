@@ -1,3 +1,28 @@
+# GitHub 기반 프로젝트 근거 검토 · 2026-10-27
+
+이번 공개 콘텐츠는 GitHub README, 구현 코드, 본인 작성 PR·커밋만 근거로 다시 작성했다. 아래의 이전 기록에서 PDF·Notion으로만 뒷받침되던 내용은 현재 공개 콘텐츠의 근거로 사용하지 않는다. 저장소 생성일·커밋일을 프로젝트 시작일로 추정하지 않는다.
+
+## 최신 근거
+
+- [백엔드 3개 프로젝트](research/backend-evidence.md)
+- [서행·ZeroPick·놀이터백과](research/mobile-evidence.md)
+- [Okii·LittlePet·영화 스터디·금융 Agent](research/web-ai-evidence.md)
+- 포트폴리오: 운영 기준 커밋 `d137e0d416d051e45235a106b3eed5b351088ae9`의 README, server/routers/blog.ts, docs/benchmarks/notion-list.md, PR #18. 측정값은 캐시를 제외한 조회 함수 기준이며 전체 페이지 성능으로 표현하지 않는다.
+
+## 적용 원칙과 검토 기록
+
+- 역할을 나눠 백엔드/모바일/웹·AI 자료를 병렬 조사하고 각 담당자가 별도 JSON 변경안을 작성했다. 메인 에이전트가 통합하고 다른 담당자가 교차 검토했다.
+- 개인 기여는 작성자와 변경 내용이 확인되는 PR·커밋 또는 역할이 명시된 README에 한정했다. 서비스 기능과 개인 기여는 별도 섹션으로 유지한다.
+- 서행·놀이터 기간은 README의 명시 기간으로 수정했다. 나머지 확인되지 않은 기간과 정렬용 startDate도 제거했다. 날짜 없는 항목은 날짜가 확인된 항목 뒤에 표시한다.
+- PlanUp 팀 실명/계정 매핑 충돌, Okii 환경변수명 불일치, Agent 미측정 속도 개선, PMS 저장소에 없는 성능 수치는 공개 설명에서 제외했다.
+- ZeroPick 기간 숨김 뒤 기존 정렬일이 남는 문제와 놀이터의 미확인 Figma 스택을 독립 리뷰에서 발견해 함께 제거했다.
+- 기존 포트폴리오의 독립 Generator/Reviewer 설계 경험은 GitHub 근거가 없어 제거했다. 이번 역할 분담은 이 작업의 기록이며 과거 경험으로 소급하지 않는다.
+- 상세 페이지에 구현 근거 링크를 추가했다. 비공개 Agent 코드는 복제하지 않고 높은 수준의 기능만 요약하며, 공개 조직 링크를 유지한다.
+
+---
+
+## 이전 조사 기록 (현재 콘텐츠의 근거로 자동 승계하지 않음)
+
 # Project content provenance · 2026-09-29
 
 Only project-related content from user-supplied documents is included. Private application details and contact information are not copied into the site.

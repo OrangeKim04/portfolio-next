@@ -1,0 +1,238 @@
+[
+  {
+    "id": "pms",
+    "subtitle": "프로젝트 요구 직무·기술에 맞는 개발자 추천",
+    "description": "명지대학교 데이터베이스 설계 수업에서 만든 프로젝트·인력 평가 관리 API입니다. 프로젝트를 등록하면 경력·기술등급·보유 기술·직무별 평가를 조합해 적합도가 높은 개발자를 최대 5명 추천합니다. 프로젝트 목록과 투입 인력, 동료 평가를 조회할 수 있으며, 저는 프로젝트 등록·발주처 조회와 추천 사유의 정합성 개선을 담당했습니다.",
+    "activity": "명지대학교 · 2025-2 데이터베이스 설계 프로젝트",
+    "role": "프로젝트 등록·발주처 조회 API · 개발자 추천 기능 개선",
+    "highlight": "요구 직무·기술 기반 상위 5명 추천과 평가 근거 제공",
+    "tags": [
+      "Java",
+      "Spring Boot",
+      "MySQL",
+      "JPA"
+    ],
+    "features": [
+      {
+        "title": "프로젝트 등록과 개발자 추천",
+        "description": "발주처, 수행 기간, 요구 직무와 기술을 입력하면 프로젝트를 등록하고 적합도가 높은 개발자를 최대 5명 반환합니다. 각 후보의 추천 직무·점수·보유 기술·경력·평가 근거를 함께 제공합니다. 추천 결과가 실제 투입 인력으로 자동 등록되지는 않습니다."
+      },
+      {
+        "title": "기간·상태별 프로젝트 탐색",
+        "description": "전체·이번 달·이번 분기와 진행·완료 조건으로 프로젝트를 조회합니다. 상세에서는 참여 직원의 이름, 직무, 투입 기간과 보유 기술을 확인합니다."
+      },
+      {
+        "title": "동료 평가 기록",
+        "description": "평가 대상과 프로젝트를 지정하고 항목별 점수·서술형 내용을 저장합니다. 평가자별 작성 목록과 평가 상세를 조회할 수 있습니다."
+      },
+      {
+        "title": "프로젝트 대시보드",
+        "description": "전체 프로젝트 수, 진행·완료 비율과 중복을 제거한 투입 직원 수를 집계합니다."
+      }
+    ],
+    "contributions": [
+      {
+        "title": "프로젝트 등록·발주처 조회",
+        "description": "프로젝트 등록과 발주처 목록 조회 API를 구현했습니다. 요청 DTO·서비스·저장소를 연결하고 프로젝트에 필요한 직무와 기술 정보를 추천 처리에 전달했습니다."
+      },
+      {
+        "title": "설명 가능한 추천 응답",
+        "description": "추천 사유를 단일 문자열에서 평가 상세 목록으로 바꿨습니다. 해당 직무에서 받은 평가 항목명·점수·서술 내용을 응답에 담고, 기존 DB 컬럼에는 목록을 구분자로 연결해 저장하도록 처리했습니다."
+      },
+      {
+        "title": "추천 사유의 대상 직원 필터링",
+        "description": "참여 프로젝트에 속한 평가를 모두 가져오던 조회를 수정했습니다. 동료·PM·고객 평가의 평가 대상 직원 ID까지 확인해 추천받는 개발자 본인의 평가만 근거에 포함하도록 변경했습니다."
+      }
+    ],
+    "stack": [
+      {
+        "label": "백엔드·데이터",
+        "items": [
+          "Java 17",
+          "Spring Boot 4.0.0",
+          "Spring Data JPA",
+          "MySQL",
+          "JPQL · Native SQL"
+        ]
+      },
+      {
+        "label": "문서·빌드",
+        "items": [
+          "SpringDoc OpenAPI",
+          "Gradle",
+          "Lombok"
+        ]
+      }
+    ],
+    "troubleshooting": [
+      {
+        "title": "추천 근거에 다른 직원의 평가가 포함되는 문제",
+        "problem": "추천 사유를 만들 때 대상 개발자가 참여한 프로젝트 ID만으로 평가를 조회해, 같은 프로젝트의 다른 직원 평가까지 포함될 수 있었습니다.",
+        "approach": "동료·PM·고객 평가 테이블을 연결한 쿼리에 평가 대상 직원 ID 조건을 추가했습니다. 추천 서비스도 프로젝트 ID와 직원 ID를 함께 받는 조회 메서드를 사용하도록 변경했습니다.",
+        "result": "추천 사유 조회 범위를 해당 프로젝트에서 대상 개발자가 받은 평가로 제한했습니다. 추천 점수와 함께 전달하는 평가 근거가 다른 직원의 기록과 섞이지 않도록 수정했습니다.",
+        "reference": {
+          "label": "추천 사유 필터 수정 커밋",
+          "url": "https://github.com/mju-db-design-2025/Backend/commit/b1c04d9855d2b7ff9ac3cc96e53e69d02241bb30"
+        }
+      }
+    ],
+    "sources": [
+      {
+        "label": "기능·추천 기준 README",
+        "url": "https://github.com/mju-db-design-2025/Backend/blob/d21cdddb3b50ef88e1f7a0bb9c703a1a3480f752/README.md"
+      },
+      {
+        "label": "프로젝트 등록 구현",
+        "url": "https://github.com/mju-db-design-2025/Backend/commit/0c2a1e83b14cb0ae8e65e653392ce8585c37e2a0"
+      },
+      {
+        "label": "추천 사유 목록 구현",
+        "url": "https://github.com/mju-db-design-2025/Backend/commit/701250a93f1fa6f59e7cdfa0cd3833b9025ca14e"
+      }
+    ],
+    "period": null,
+    "startDate": null,
+    "team": null
+  },
+  {
+    "id": "planup",
+    "role": "친구 관리·마이페이지·계정 인증 API 개발",
+    "description": "학습·운동·독서 목표를 친구들과 공유하고 타이머나 사진으로 활동을 인증하는 소셜 플랫폼입니다. 목표·챌린지·리포트·배지 기능 가운데 친구 관계와 마이페이지 API를 맡았고, 이메일·비밀번호 변경과 기존 계정의 카카오 연동을 구현했습니다.",
+    "features": [
+      {
+        "title": "목표 설정과 활동 인증",
+        "description": "개인·친구·커뮤니티 목표를 생성하고 타이머 또는 사진으로 진행 상황을 기록합니다. 친구와 챌린지를 만들고 목표 달성을 함께 이어갑니다."
+      },
+      {
+        "title": "친구 관계와 활동 확인",
+        "description": "친구 신청·수락·거절·삭제·차단·신고를 지원합니다. 친구 목록에는 목표 수, 오늘의 활동 시간과 새 사진 인증 여부를 표시하고 신청·수락·거절에 맞는 알림을 생성합니다."
+      },
+      {
+        "title": "계정과 마이페이지",
+        "description": "프로필과 계정 정보를 확인하고 이메일 인증을 거쳐 이메일·비밀번호를 변경합니다. 기존 자체 가입 계정에 카카오 계정을 연결해 같은 사용자로 로그인할 수 있습니다."
+      },
+      {
+        "title": "리포트와 배지",
+        "description": "일간·주간 목표 달성 현황을 리포트로 확인하고 활동에 따른 배지를 받습니다."
+      }
+    ],
+    "contributions": [
+      {
+        "title": "친구 관계의 상태 변화 처리",
+        "description": "친구 신청·수락·거절·삭제·차단·신고 API를 구현하고 자기 자신에게 신청하거나 중복 신청하는 경우를 제한했습니다. 목록에 목표 수·활동 시간·사진 인증 여부를 실제 데이터로 연결하고, 신청·수락·거절 상황별 알림을 추가했습니다."
+      },
+      {
+        "title": "인증 파라미터 처리 개선",
+        "description": "@CurrentUser의 Long·User 파라미터를 모두 지원하도록 HandlerMethodArgumentResolver를 수정했습니다. Long 요청에는 JWT에서 얻은 사용자 ID를 반환하고, User 객체가 필요한 요청에만 저장소 조회를 수행합니다."
+      },
+      {
+        "title": "이메일 인증과 계정 변경",
+        "description": "이메일 변경 인증·재발송과 비밀번호 재설정 흐름을 구현했습니다. 로그인하지 않은 사용자도 이메일 인증 토큰으로 비밀번호를 바꿀 수 있도록 변경하고, 새 비밀번호와 확인값의 일치 여부를 검사했습니다."
+      },
+      {
+        "title": "기존 계정의 카카오 연결",
+        "description": "자체 가입 계정에 카카오 정보를 연결하고, 연결된 카카오 계정으로 로그인하면 기존 사용자로 인식하도록 구현했습니다. 중복 연동을 방지하는 오류 처리도 추가했습니다."
+      }
+    ],
+    "troubleshooting": [
+      {
+        "title": "인증 사용자 ID를 받지 못하는 파라미터 처리 오류",
+        "problem": "@CurrentUser Long userId를 사용하는 친구 API에서 사용자 ID가 null로 전달됐습니다. Resolver의 타입 검사 코드가 Long 대신 User를 비교하고 있었습니다.",
+        "approach": "supportsParameter가 Long과 User를 모두 지원하도록 수정하고, 실제 반환값도 요청된 파라미터 타입에 따라 분기했습니다.",
+        "result": "ID를 요청하는 API에는 사용자 ID를 직접 전달하고, 엔티티를 요청하는 경우에만 findById를 호출하도록 수정했습니다.",
+        "reference": {
+          "label": "인증 파라미터 수정 PR #61",
+          "url": "https://github.com/UMC-Plan-up/Plan-up-server/pull/61"
+        }
+      },
+      {
+        "title": "이메일 변경 중 인증 토큰이 먼저 삭제되는 문제",
+        "problem": "이메일 변경 인증 메일의 확인 버튼을 눌러도 인증에 실패했습니다. 변경을 완료하기 전에 토큰을 삭제하는 순서가 원인이었습니다.",
+        "approach": "토큰을 이메일 변경 완료 후에 삭제하도록 처리 순서를 수정했습니다.",
+        "result": "이메일 변경에 필요한 토큰을 처리 완료 시점까지 유지하도록 인증 흐름을 바로잡았습니다.",
+        "reference": {
+          "label": "토큰 삭제 시점 수정 PR #115",
+          "url": "https://github.com/UMC-Plan-up/Plan-up-server/pull/115"
+        }
+      }
+    ],
+    "stack": [
+      {
+        "label": "백엔드",
+        "items": [
+          "Java 17",
+          "Spring Boot 3.3.4",
+          "MySQL",
+          "Gradle"
+        ]
+      },
+      {
+        "label": "인증·문서",
+        "items": [
+          "JWT",
+          "Redis",
+          "Swagger · OpenAPI"
+        ]
+      },
+      {
+        "label": "팀 운영 환경",
+        "items": [
+          "AWS EC2 · S3 · RDS",
+          "GitHub Actions"
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "label": "서비스 기능 README",
+        "url": "https://github.com/UMC-Plan-up/Plan-up-server/blob/763cc88e1f247c793746eacf0acecaa31e77d7bf/README.md"
+      },
+      {
+        "label": "친구 알림 PR #132",
+        "url": "https://github.com/UMC-Plan-up/Plan-up-server/pull/132"
+      },
+      {
+        "label": "카카오 계정 연결 PR #136",
+        "url": "https://github.com/UMC-Plan-up/Plan-up-server/pull/136"
+      }
+    ],
+    "period": null,
+    "startDate": null,
+    "team": null,
+    "activity": null
+  },
+  {
+    "id": "spring-study",
+    "features": [
+      {
+        "title": "객체 생성과 사용 책임 분리",
+        "description": "회원·주문·할인 정책 예제로 구체 구현에 의존하는 구조를 분석하고, 설정 클래스와 생성자 주입을 통해 구현체 선택을 서비스 코드에서 분리했습니다."
+      },
+      {
+        "title": "빈 조회·싱글톤·생명주기 실습",
+        "description": "빈 조회와 주입, 컴포넌트 스캔, 싱글톤·프로토타입 스코프를 테스트 코드로 다룹니다. 공유 객체가 상태를 가질 때의 문제와 초기화·종료 시점을 학습합니다."
+      },
+      {
+        "title": "스코프가 다른 빈의 연결",
+        "description": "싱글톤과 요청·프로토타입 스코프의 생명주기 차이를 다루고, Provider 지연 조회와 scoped proxy로 실제 사용 시점에 객체를 연결하는 방식을 학습합니다."
+      },
+      {
+        "title": "웹 요청 처리와 JPA 확장",
+        "description": "Servlet/JSP부터 Spring MVC 요청·응답, Thymeleaf 상품 관리와 PRG 패턴, jpashop의 도메인 모델·JPA 연동까지 모듈별로 실습합니다. 출시 서비스가 아닌 학습 저장소입니다."
+      }
+    ],
+    "sources": [
+      {
+        "label": "학습 모듈 구성",
+        "url": "https://github.com/OrangeKim04/spring-study-archive/blob/4b0aa74bfbee6e49a60856716468621546e43a17/README.md"
+      },
+      {
+        "label": "DI·싱글톤·스코프 학습 기록",
+        "url": "https://github.com/OrangeKim04/spring-study-archive/blob/4b0aa74bfbee6e49a60856716468621546e43a17/core/README.md"
+      }
+    ],
+    "period": null,
+    "startDate": null,
+    "team": null
+  }
+]

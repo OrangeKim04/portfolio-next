@@ -1,0 +1,77 @@
+[
+  {
+    "id": "seohaeng",
+    "period": "2025.05.19 — 2025.09.18",
+    "startDate": "2025-05-19",
+    "activity": null,
+    "team": null,
+    "role": "프론트엔드 개발",
+    "description": "강원도의 독립서점·북카페·북스테이를 찾아 여행하고, 책 읽기 좋은 장소와 감상을 기록하는 모바일 앱입니다. 이정표에서 장소를 탐색하고, 공간책갈피로 독서 경험을 공유하며, 북챌린지와 날짜별 여행 일정으로 이어지는 흐름을 제공합니다. React Native 앱과 WebView 지도를 연결하고 지도 조회·선택 상태 복원·인증 흐름을 구현했습니다.",
+    "github": "https://github.com/SeoHaeng/SeoHaeng_FE",
+    "contributions": [
+      {"title":"앱과 웹 지도의 이벤트 연결","description":"React Native WebView 안에서 카카오 지도를 표시하고 메시지로 지도 이벤트와 앱 상태를 연결했습니다. 지도 경계를 위도·경도 범위로 변환해 장소를 조회하며, 유형별 SVG 마커와 선택한 장소의 정보를 함께 표시했습니다."},
+      {"title":"지도 조회 제어와 선택 상태 복원","description":"지도 범위 변경 후 1초 동안 추가 변경이 없을 때 마커를 조회하도록 타이머를 정리했습니다. 필요한 장소 유형은 Promise.all로 병렬 조회하고, 관광지·음식점·축제는 선택한 필터에 대해서만 요청했습니다. Context에 선택 위치와 활성 마커를 저장해 검색·상세 화면에서 돌아온 뒤 다시 선택하도록 연결했습니다."},
+      {"title":"인증 저장·복원과 재시도","description":"소셜 로그인 인가 코드를 서버에 전달하고 신규 회원 여부에 따라 화면을 분기했습니다. AsyncStorage에 인증 정보를 저장하고 AuthProvider에서 복원합니다. 공통 인증 요청 함수에는 403 응답 시 토큰을 재발급받고 원래 요청을 한 번 다시 보내는 경로를 구성했습니다."},
+      {"title":"여행 일정과 사진 기록의 데이터 구성","description":"날짜별 장소·좌표·방문 순서를 일정 요청 모델로 변환하고, 번호 마커와 점선으로 등록 순서를 표시했습니다. 공간책갈피·리뷰·북챌린지는 이미지와 JSON을 FormData로 전송하고, 도서 검색 화면을 기록 용도에 따라 재사용했습니다."}
+    ],
+    "stack": [
+      {"label":"앱·상태","items":["React Native 0.79","Expo SDK 53","TypeScript","Expo Router","React Context","AsyncStorage"]},
+      {"label":"지도·기기","items":["Kakao Maps JavaScript SDK","React Native WebView","expo-location","expo-image-picker","react-native-svg"]},
+      {"label":"통신·빌드","items":["Fetch API","FormData","OAuth 인가 코드 연동","EAS Build"]}
+    ],
+    "troubleshooting": [
+      {"title":"지도 이동 중 반복되는 장소 조회","problem":"지도를 이동하거나 확대·축소하면 표시 범위가 연속으로 변경되어 마커 조회가 반복되는 경로가 있었습니다.","approach":"useRef에 타이머를 보관하고 범위가 다시 바뀌면 기존 예약을 취소했습니다. 마지막 변경 뒤 1초 후에 범위·필터에 맞는 장소를 조회하고, effect 정리 시 타이머도 해제했습니다.","result":"해당 조회 경로에서 연속 범위 변경을 마지막 변경 이후의 요청으로 묶었습니다. 요청 감소율이나 응답시간 개선 수치는 측정하지 않았습니다.","reference":{"label":"디바운싱 도입 커밋","url":"https://github.com/SeoHaeng/SeoHaeng_FE/commit/f5cfc8a684a5c3af4910363c5963d8004851925d"}},
+      {"title":"지도로 돌아왔을 때 선택한 장소 복원","problem":"검색·상세 화면을 오갈 때 선택한 장소와 지도 위치를 이어서 보여줄 상태 관리가 필요했습니다.","approach":"선택 좌표·활성 마커 ID·클릭한 장소 정보를 Context로 공유하고, 마커 조회가 끝난 뒤 선택한 마커를 다시 찾아 지도 활성화 명령과 연결했습니다.","result":"화면 전환과 비동기 마커 로드를 거쳐 선택 상태를 복원하는 경로를 구성했습니다. 이 상태는 실행 중 메모리에 유지되며 앱 재시작 복원을 뜻하지 않습니다.","reference":{"label":"선택 상태 복원 커밋","url":"https://github.com/SeoHaeng/SeoHaeng_FE/commit/aaefb3b"}}
+    ],
+    "sources": [{"label":"프론트엔드 README","url":"https://github.com/SeoHaeng/SeoHaeng_FE/blob/a9f694035705e307c709da5882acbbed8779c4d5/README.md"},{"label":"서비스 소개·외부 API","url":"https://github.com/SeoHaeng/SeoHaeng_BE/blob/2343e587f1c5e581814eb33120ab9e14498980f5/README.md"}]
+  },
+  {
+    "id":"zeropick",
+    "period":null,
+    "activity":"캡스톤디자인 4조",
+    "team":"5명 · Frontend 2 / Backend 3",
+    "role":"프론트엔드 팀장 · OCR·레시피·사용자 기능",
+    "description":"식품 원재료 이미지를 분석하고 영양성분·대체당 정보와 재료 기반 레시피를 탐색하는 모바일 중심 웹 서비스입니다. 프론트엔드 팀장으로 OCR·레시피·사용자 기능을 담당했습니다. OCR 인식과 감미료 매칭, 레시피 생성은 백엔드 API로 제공받고 이미지 전처리·결과 표시·실패 후 대체 입력을 연결했습니다.",
+    "features":[
+      {"title":"이미지 영역 선택과 OCR 분석","description":"사진에서 원재료 영역을 잘라 업로드하고 상품명·제조사를 확인한 뒤 영양성분과 감미료를 조회합니다. 스캔에 실패하면 품목제조보고번호를 직접 입력해 조회를 이어갑니다."},
+      {"title":"식품 검색과 영양정보 비교","description":"검색어별 식품 목록을 스크롤로 추가 조회합니다. 식품 상세에서 영양성분 함량·기준치 비율과 감미료의 분류·열량·GI 지수·설명 등을 확인합니다."},
+      {"title":"재료 기반 레시피 추천·저장","description":"입력한 재료로 추천 목록을 받은 뒤 선택한 레시피의 조리 단계를 생성합니다. 레시피를 저장하고 최근 저장 목록에서 다시 확인합니다."},
+      {"title":"제로식품 커뮤니티","description":"상품 리뷰·레시피·자유 게시판에서 이미지와 글을 공유하고 댓글·답글로 소통합니다. 커뮤니티는 다른 프론트엔드 팀원의 담당 영역입니다."}
+    ],
+    "contributions":[
+      {"title":"OCR 실패 후에도 이어지는 분석 흐름","description":"react-cropper로 선택한 영역을 Blob으로 변환해 FormData로 전송했습니다. OCR 오류의 detail을 useRef에 보관하고 품목제조보고번호로 상품을 다시 찾은 뒤 후속 확인 요청의 ocrText에 전달했습니다."},
+      {"title":"영양성분 표시 로직 재사용","description":"API 응답을 단위·기준치 비율·들여쓰기 정보를 가진 행 데이터로 변환하고 TanStack Table로 표시했습니다. OCR 결과와 검색 상세가 영양성분표·감미료 카드·저장 컴포넌트를 공유하도록 구성했습니다."},
+      {"title":"추천과 상세 생성을 구분한 레시피 조회","description":"재료 기반 추천 목록과 선택한 레시피의 상세 생성 요청을 나눴습니다. 입력 재료·추천 결과와 생성한 상세를 sessionStorage에 보관해 같은 조건으로 재진입할 때 재사용하며, 저장된 레시피는 ID로 조회합니다."},
+      {"title":"응답 오류를 호출부에 전달하는 요청 함수","description":"쿠키를 포함하는 customFetch에서 JSON·문자열·빈 응답을 처리하고 401이면 로그인 화면으로 이동하도록 구성했습니다. 실패 응답의 상태·상세를 호출부에 전달해 OCR 화면의 수동 조회와 연결했습니다."}
+    ],
+    "stack":[
+      {"label":"프론트엔드","items":["React 19","TypeScript","Vite","React Router","styled-components"]},
+      {"label":"데이터·입력","items":["TanStack Query","Zustand","React Hook Form","Yup","sessionStorage"]},
+      {"label":"이미지·시각화","items":["react-cropper","TanStack Table","Framer Motion","Vercel"]}
+    ],
+    "troubleshooting":[
+      {"title":"OCR 실패 시 대체 입력으로 분석 이어가기","problem":"원재료 이미지 스캔이 실패하더라도 사용자가 제품을 직접 식별해 분석을 이어갈 경로가 필요했습니다.","approach":"오류 상세를 useRef에 보관하고 품목제조보고번호 입력을 표시했습니다. 번호로 상품을 조회한 뒤 오류 상세와 제품 식별 정보를 후속 확인 요청에 전달했습니다.","result":"이미지 재업로드만 요구하지 않고 수동 제품 조회로 분석을 이어가는 경로를 구현했습니다. 인식 정확도 향상 수치는 확인되지 않았습니다.","reference":{"label":"OCR 화면 구현","url":"https://github.com/capstoneMJU/frontend/blob/e3c2d12dfea3ef2470a11edb40808bb53dbbbee3/ZeroPick/src/pages/Home/CameraPage.tsx"}}
+    ],
+    "sources":[{"label":"프론트엔드 README·구현 설명","url":"https://github.com/capstoneMJU/frontend/blob/e3c2d12dfea3ef2470a11edb40808bb53dbbbee3/README.md"},{"label":"팀과 역할 분담","url":"https://github.com/capstoneMJU/.github/blob/d860f7e41df8272f5f47dfacfbf3b61e69e9dda4/profile/README.md"}]
+  },
+  {
+    "id":"playground",
+    "period":"2024.10.28 — 2024.11.08",
+    "startDate":"2024-10-28",
+    "activity":"2024 제3회 오픈데이터포럼(ODF) 해커톤",
+    "team":"2명 · 김규리 / 장민주",
+    "role":"앱 개발",
+    "description":"놀이터의 위치뿐 아니라 안전검사·보험·주변 안전시설을 함께 확인하는 지도 기반 앱입니다. 공공데이터를 JSON으로 정리하고 시설번호로 결합해 마포구 놀이터 상세 정보를 구성했습니다. 날씨와 서울 지역 대기질을 표시하며 즐겨찾기에서 선택한 시설을 다시 지도에서 볼 수 있습니다.",
+    "contributions":[
+      {"title":"시설번호로 공공데이터 결합","description":"앱에 포함한 놀이시설·검사·보험 JSON에서 pfctSn이 같은 항목을 찾아 하나의 마커 정보로 구성했습니다. 시설 상세에는 주소·설치 정보·놀이기구와 검사·보험 정보를 표시했습니다."},
+      {"title":"지도 탐색과 즐겨찾기 연결","description":"시설 유형별 정보를 지도에 표시하고 상세 정보 패널을 연결했습니다. 즐겨찾기에서 선택한 시설을 지도에 전달해 해당 위치로 이동하고 상세 정보를 다시 표시하는 흐름을 구성했습니다."},
+      {"title":"정적 시설 정보와 현재 환경 정보 구분","description":"시설 정보는 정리한 JSON으로 제공하고, 현재 날씨는 OpenWeather, 대기질은 에어코리아의 서울 지역 조회 응답을 사용했습니다."}
+    ],
+    "troubleshooting":[
+      {"title":"서로 나뉜 시설·검사·보험 정보 연결","problem":"놀이시설의 기본 정보와 안전검사·보험 정보가 별도 데이터로 제공되어 시설별 상세 화면에 함께 구성해야 했습니다.","approach":"JSON으로 정리한 데이터에서 시설번호 pfctSn이 일치하는 검사·보험 항목을 찾아 놀이시설 정보와 결합했습니다.","result":"선택한 놀이터의 기본 정보와 검사·보험 정보를 하나의 상세 패널에서 표시하도록 구성했습니다.","reference":{"label":"데이터 결합 코드","url":"https://github.com/OrangeKim04/PLAYGROUND/blob/0172e60366a50db129bf91eb8587555465676c47/pages/main.js"}}
+    ],
+    "lessons":null,
+    "highlight":"제3회 ODF 해커톤 최우수상 · 한국지능정보사회진흥원장상",
+    "sources":[{"label":"프로젝트·기간·팀·수상·사용 데이터","url":"https://github.com/OrangeKim04/PLAYGROUND/blob/0172e60366a50db129bf91eb8587555465676c47/README.md"},{"label":"지도·데이터 결합 구현","url":"https://github.com/OrangeKim04/PLAYGROUND/blob/0172e60366a50db129bf91eb8587555465676c47/pages/main.js"}]
+  }
+]

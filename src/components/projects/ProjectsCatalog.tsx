@@ -22,7 +22,7 @@ export default function ProjectsCatalog() {
             <h1>만들고, 연결하고,<br /><span>해결한 것들.</span></h1>
             <div className={styles.intro}>
               <p>아이디어를 서비스로 옮기며 쌓은 경험들.<br />서비스 개발부터 개인 학습까지, 직접 만든 프로젝트를 소개합니다.</p>
-              <span className={styles.total}><Code2 size={15} /> {String(projects.length).padStart(2, "0")} PROJECTS · {projects.at(-1)?.startDate.slice(0, 4)} — {projects[0].startDate.slice(0, 4)}</span>
+              <span className={styles.total}><Code2 size={15} /> {String(projects.length).padStart(2, "0")} PROJECTS</span>
             </div>
           </div>
         </header>
@@ -36,7 +36,7 @@ export default function ProjectsCatalog() {
               </button>
             ))}
           </div>
-          <span className={styles.resultCount} role="status">{visible.length}개의 프로젝트 · 시작일 최신순</span>
+          <span className={styles.resultCount} role="status">{visible.length}개의 프로젝트 · 확인된 시작일 최신순</span>
         </div>
         <div className={styles.grid}>
           <h2 className="sr-only">프로젝트 목록</h2>
