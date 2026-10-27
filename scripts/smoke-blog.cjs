@@ -1,6 +1,7 @@
 // CI read-only smoke test for the exact protected Vercel deployment.
 const { execFileSync } = require('node:child_process');
 const assert = require('node:assert/strict');
+const { readFileSync } = require('node:fs');
 const deployment = process.env.PREVIEW_URL;
 assert.ok(deployment && process.env.VERCEL_TOKEN, 'Deployment URL and Vercel token required');
 function read(path) {
@@ -16,6 +17,16 @@ function list(input) {
   return result;
 }
 try {
+  const projectIds = [...readFileSync('src/data/projects.ts', 'utf8').matchAll(/"id": "([^"]+)"/g)].map(match => match[1]);
+  assert.ok(projectIds.length > 0, 'Project routes required');
+  const home = read('/');
+  const catalog = read('/projects');
+  assert.ok(home.includes('/projects'), 'Home project catalog link required');
+  for (const id of projectIds) {
+    assert.ok(catalog.includes(`/project/${id}`), `Catalog entry required: ${id}`);
+    assert.ok(read(`/project/${id}`).includes('구현 근거'), `Project evidence required: ${id}`);
+  }
+  console.log(JSON.stringify({ projectsSmoke: 'passed', detailPages: projectIds.length }));
   assert.ok(read('/blogs').includes('<html'), 'Blog document must load');
   const first = list({ page: 1, limit: 10 });
   assert.equal(first.posts.length, Math.min(first.pagination.total, 10));
